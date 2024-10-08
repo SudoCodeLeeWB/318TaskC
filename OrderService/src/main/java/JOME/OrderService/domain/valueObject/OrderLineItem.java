@@ -1,15 +1,12 @@
-package JOME.OrderService.domain.entity;
+package JOME.OrderService.domain.valueObject;
 
+import JOME.OrderService.domain.entity.Product;
 import jakarta.persistence.*;
 
-import java.util.UUID;
 
 
-@Entity
+@Embeddable
 public class OrderLineItem {
-    @Id
-    @GeneratedValue( strategy = GenerationType.IDENTITY)
-    private UUID id;
 
     @OneToOne
     private Product product;
@@ -23,11 +20,6 @@ public class OrderLineItem {
         this.quantity = quantity;
     }
 
-    // TODO : check usage and remove it
-    public OrderLineItem(UUID productId, String productName, double unitPrice, int quantity){
-        this.quantity = quantity;
-    }
-
 
     /**
      * @return unit price * quantity
@@ -37,14 +29,8 @@ public class OrderLineItem {
     }
 
 
-    // Getters and setters
-    public void setId(UUID id) {
-        this.id = id;
-    }
 
-    public UUID getId() {
-        return id;
-    }
+    // Getters and Setters
 
    public Product getProduct(){
         return product;

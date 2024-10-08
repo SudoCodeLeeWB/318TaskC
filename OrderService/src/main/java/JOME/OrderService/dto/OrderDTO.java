@@ -1,30 +1,31 @@
 package JOME.OrderService.dto;
 
 import JOME.OrderService.domain.entity.Order;
-import JOME.OrderService.domain.entity.OrderLineItem;
+import JOME.OrderService.domain.valueObject.OrderLineItem;
 import JOME.OrderService.domain.valueObject.DeliveryAddress;
 import JOME.OrderService.domain.valueObject.OrderStatus;
-import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 public class OrderDTO {
 
-    private UUID customerId;
-    private String customerName;
-    private boolean paymentStatus;
-    private double totalPrice;
-    private LocalDateTime recentUpdateTime;
+    public Long customerId;
+    public String customerName;
+    public boolean paymentStatus;
+    public double totalPrice;
+    public LocalDateTime recentUpdateTime;
 
     // Entities
-    private List<OrderLineItemDTO> orderLineItemList;
+    public List<OrderLineItemDTO> orderLineItemList;
 
     // value objects
-    private OrderStatus orderStatus;
-    private DeliveryAddress deliveryAddress;
+    public OrderStatus orderStatus;
+    public DeliveryAddress deliveryAddress;
+
+
+    public OrderDTO(){}
 
     public OrderDTO(Order order){
         this.customerId = order.getCustomerId();

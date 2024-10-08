@@ -17,10 +17,10 @@ import JOME.OrderService.infrastructure.persistance.CustomerRepostory;
 import JOME.OrderService.infrastructure.persistance.OrderRepository;
 import JOME.OrderService.infrastructure.persistance.ProductRepository;
 import JOME.OrderService.infrastructure.persistance.ShoppingCartRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 public class OrderService {
@@ -63,7 +63,7 @@ public class OrderService {
 
 
     // 1. Add a new product to the shopping cart
-    public ShoppingCartDTO addNewOrderLineItemToShoppingCart(UUID customerId , UUID productId , int quantity) {
+    public ShoppingCartDTO addNewOrderLineItemToShoppingCart(Long customerId , Long productId , int quantity) {
 
         // setup shopping cart
         Optional<ShoppingCart> recentShoppingCart = shoppingCartRepository.findByCustomerId(customerId);
@@ -82,7 +82,7 @@ public class OrderService {
 
 
     // 2. Change the Quantity of a OrderLineProduct ( shopping cart ) - Delete
-    public ShoppingCartDTO deleteOrderLineItemQuantity( UUID customerId, UUID productId , int quantity ){
+    public ShoppingCartDTO deleteOrderLineItemQuantity( Long customerId, Long productId , int quantity ){
 
         //setup shopping cart
         Optional<ShoppingCart> recentShoppingCart = shoppingCartRepository.findByCustomerId(customerId);
@@ -97,7 +97,7 @@ public class OrderService {
 
     // 3. Change the Quantity of a OrderLineProduct ( shopping cart ) - Add
 
-    public ShoppingCartDTO addOrderLineItemQuantity( UUID customerId , UUID productId , int quantity ){
+    public ShoppingCartDTO addOrderLineItemQuantity( Long customerId , Long productId , int quantity ){
 
         //setup shopping cart
         Optional<ShoppingCart> recentShoppingCart = shoppingCartRepository.findByCustomerId(customerId);
@@ -112,7 +112,8 @@ public class OrderService {
 
 
     // 3. Place Order
-    public OrderDTO placeOrder( UUID customerId ){
+    @Transactional
+    public OrderDTO placeOrder( Long customerId ){
 
         // find Shopping Cart
         Optional<ShoppingCart> recentShoppingCart = shoppingCartRepository.findByCustomerId(customerId);
@@ -131,6 +132,7 @@ public class OrderService {
 
         if(paymentResult){
             // end of ShoppingCartLifeCycle
+            currentShoppingCart.getOrderLineItemList().clear();
             shoppingCartRepository.delete(currentShoppingCart);
 
             // Raise New Event : OrderPlaced Event
@@ -150,7 +152,7 @@ public class OrderService {
 
 
     // 4. Cancel Order
-   public OrderDTO cancelOrder(UUID orderId){
+   public OrderDTO cancelOrder(Long orderId){
 
         // find order from Repository
         Optional<Order> order = orderRepository.findById(orderId);

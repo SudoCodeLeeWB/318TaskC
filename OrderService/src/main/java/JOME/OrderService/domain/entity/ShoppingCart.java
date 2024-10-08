@@ -1,13 +1,12 @@
 package JOME.OrderService.domain.entity;
 
 
+import JOME.OrderService.domain.valueObject.OrderLineItem;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.UUID;
 
 @Entity
 public class ShoppingCart {
@@ -17,18 +16,16 @@ public class ShoppingCart {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private UUID customerId;
+    private Long customerId;
     private double totalPrice;
     private LocalDateTime recentUpdateTime;
 
     // Entities
-    @OneToMany( cascade = CascadeType.ALL , orphanRemoval = true)  // set up Cascade settings
-    private List<OrderLineItem> orderLineItemList;
-
-
+    @ElementCollection
+    @CollectionTable
+    private List<OrderLineItem> orderLineItemList = new ArrayList<>();
 
     // Constructor
-
 
     protected ShoppingCart(){}
 
@@ -37,11 +34,10 @@ public class ShoppingCart {
     /**
      * Will be used for ShoppingCartFactory
      * */
-    public ShoppingCart(UUID customerId, double totalPrice, LocalDateTime recentUpdateTime , List<OrderLineItem> orderLineItemList) {
+    public ShoppingCart(Long customerId, double totalPrice, LocalDateTime recentUpdateTime) {
         this.customerId = customerId;
         this.totalPrice = totalPrice;
         this.recentUpdateTime = recentUpdateTime;
-        this.orderLineItemList = orderLineItemList;
     }
 
 
@@ -77,7 +73,7 @@ public class ShoppingCart {
      * After adding, if the quantity is bigger than 10, then It will automatically make is as 10
      * @return If added : return True / No such Item in the OrderLineItem : return False
      */
-    public void addOrderLineItemQuantity(UUID productId, int quantity){
+    public void addOrderLineItemQuantity(Long productId, int quantity){
 
         // invalid quantity number - do nothing
         if ( quantity <= 0){
@@ -114,7 +110,7 @@ public class ShoppingCart {
      * After deleting , if the quantity is smaller than 0, then It will remove the OrderLIneItem itself
      * @return If removed : return True / No such Item in the OrderLineItem : return False
      */
-    public void removeOrderLineItemQuantity( UUID productId , int quantity){
+    public void removeOrderLineItemQuantity( Long productId , int quantity){
 
 
         // invalid quantity number - do nothing
@@ -147,7 +143,7 @@ public class ShoppingCart {
 
 
     // private helper method to find the product in the OrderLineItem
-    private OrderLineItem findProduct( UUID productId ){
+    private OrderLineItem findProduct( Long productId ){
         for(OrderLineItem orderLineItem : orderLineItemList){
             if(orderLineItem.getProduct().getId().equals(productId)){
                 return orderLineItem;
@@ -193,11 +189,11 @@ public class ShoppingCart {
         return id;
     }
 
-    public UUID getCustomerId() {
+    public Long getCustomerId() {
         return customerId;
     }
 
-    public void setCustomerId(UUID customerId) {
+    public void setCustomerId(Long customerId) {
         this.customerId = customerId;
     }
 

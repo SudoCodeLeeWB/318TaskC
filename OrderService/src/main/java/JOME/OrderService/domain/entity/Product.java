@@ -3,7 +3,6 @@ package JOME.OrderService.domain.entity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 
-import java.util.UUID;
 
 
 // will be saved to the repository
@@ -12,7 +11,7 @@ import java.util.UUID;
 public class Product {
 
     @Id
-    private UUID id;  // same value from Product Microservice
+    private Long id;  // same value from Product Microservice
     private String name;
     private double price;
 
@@ -22,17 +21,17 @@ public class Product {
 
 
     // to be used for ACL
-    public Product( UUID Id , String name , double price ){
+    public Product( Long Id , String name , double price ){
         this.id = Id;
         this.name = name;
         this.price = price;
     }
 
-    public void setId(UUID id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public UUID getId() {
+    public Long getId() {
         return id;
     }
 

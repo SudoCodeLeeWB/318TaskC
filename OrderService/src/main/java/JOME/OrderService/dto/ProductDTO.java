@@ -5,8 +5,8 @@ import JOME.OrderService.domain.entity.Product;
 
 public class ProductDTO {
 
-    private String name;
-    private double price;
+    public String name;
+    public double price;
 
 
     // constructor

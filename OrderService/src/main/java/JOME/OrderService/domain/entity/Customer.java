@@ -6,32 +6,30 @@ import JOME.OrderService.infrastructure.persistance.CustomerRepostory;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 
-import java.util.UUID;
 
 @Entity
 public class Customer {
 
     @Id
-    private UUID customerId;  // same value from Customer microservice
+    private Long customerId;  // same value from Customer microservice
     private String name;
     private DeliveryAddress deliveryAddress;
-
 
     protected Customer(){}
 
     // To be used for ACL
-    public Customer( UUID customerId , String name , DeliveryAddress address){
+    public Customer( Long customerId , String name , DeliveryAddress address){
         this.customerId = customerId;
         this.name = name;
         this.deliveryAddress = address;
     }
 
 
-    public UUID getCustomerId() {
+    public Long getCustomerId() {
         return customerId;
     }
 
-    public void setCustomerId(UUID customerId) {
+    public void setCustomerId(Long customerId) {
         this.customerId = customerId;
     }
 

@@ -1,26 +1,21 @@
 package JOME.OrderService.dto;
 
-import JOME.OrderService.domain.entity.OrderLineItem;
+import JOME.OrderService.domain.valueObject.OrderLineItem;
 import JOME.OrderService.domain.entity.ShoppingCart;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.OneToMany;
 
-import java.sql.Array;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 public class ShoppingCartDTO {
 
 
-    private UUID customerId;
-    private double totalPrice;
-    private LocalDateTime recentUpdateTime;
+    public Long customerId;
+    public double totalPrice;
+    public LocalDateTime recentUpdateTime;
 
     // Entities
-    @OneToMany( cascade = CascadeType.ALL , orphanRemoval = true)  // set up Cascade settings
-    private List<OrderLineItemDTO> orderLineItemList;
+    public List<OrderLineItemDTO> orderLineItemList;
 
     public ShoppingCartDTO(){}
 
@@ -42,5 +37,12 @@ public class ShoppingCartDTO {
         }
         return newList;
     }
+
+
+
+
+
+
+
 
 }

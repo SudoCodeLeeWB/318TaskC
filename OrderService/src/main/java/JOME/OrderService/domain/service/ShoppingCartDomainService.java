@@ -1,12 +1,11 @@
 package JOME.OrderService.domain.service;
 
-import JOME.OrderService.domain.entity.OrderLineItem;
+import JOME.OrderService.domain.valueObject.OrderLineItem;
 import JOME.OrderService.domain.entity.Product;
 import JOME.OrderService.domain.entity.ShoppingCart;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.UUID;
 
 
 @Service
@@ -28,14 +27,14 @@ public class ShoppingCartDomainService {
         return shoppingCart;
     }
 
-    public ShoppingCart addProductQuantityFromShoppingCart(ShoppingCart shoppingCart , UUID productId , int quantity){
+    public ShoppingCart addProductQuantityFromShoppingCart(ShoppingCart shoppingCart , Long productId , int quantity){
         shoppingCart.addOrderLineItemQuantity(productId , quantity);
         shoppingCart.calculateTotalPrice();
         shoppingCart.updateRecentUpdateTime();
         return shoppingCart;
     }
 
-    public ShoppingCart removeProductQuantityFromShoppingCart(ShoppingCart shoppingCart , UUID productId , int quantity){
+    public ShoppingCart removeProductQuantityFromShoppingCart(ShoppingCart shoppingCart , Long productId , int quantity){
         shoppingCart.removeOrderLineItemQuantity(productId , quantity);
         shoppingCart.calculateTotalPrice();
         shoppingCart.updateRecentUpdateTime();
@@ -48,7 +47,7 @@ public class ShoppingCartDomainService {
 
         List<OrderLineItem> orderLineItemList = shoppingCart.getOrderLineItemList();
         for( OrderLineItem orderLineItem : orderLineItemList){
-            if(orderLineItem.getId() == product.getId()){
+            if(orderLineItem.getProduct().getId().equals(product.getId())){
                 return true;
             }
         }

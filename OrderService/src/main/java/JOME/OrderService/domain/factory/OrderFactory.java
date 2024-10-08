@@ -6,6 +6,7 @@ import JOME.OrderService.domain.entity.Order;
 import JOME.OrderService.domain.entity.ShoppingCart;
 import JOME.OrderService.domain.valueObject.DeliveryAddress;
 import JOME.OrderService.domain.valueObject.OrderStatus;
+import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -30,7 +31,8 @@ public class OrderFactory {
                 OrderStatus.Pending,
                 customer.getDeliveryAddress(),
                 shoppingCart.getOrderLineItemList(),
-                customer.getName()
+                customer.getName(),
+                LocalDateTime.now()
         );
 
         return newOrder;

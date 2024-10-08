@@ -24,18 +24,21 @@ public class ShoppingCartDomainService {
         // if there is no same product in the shopping cart
         shoppingCart.addNewOrderLineItem(product, quantity);
         shoppingCart.calculateTotalPrice();
+        shoppingCart.updateRecentUpdateTime();
         return shoppingCart;
     }
 
     public ShoppingCart addProductQuantityFromShoppingCart(ShoppingCart shoppingCart , UUID productId , int quantity){
         shoppingCart.addOrderLineItemQuantity(productId , quantity);
         shoppingCart.calculateTotalPrice();
+        shoppingCart.updateRecentUpdateTime();
         return shoppingCart;
     }
 
     public ShoppingCart removeProductQuantityFromShoppingCart(ShoppingCart shoppingCart , UUID productId , int quantity){
         shoppingCart.removeOrderLineItemQuantity(productId , quantity);
         shoppingCart.calculateTotalPrice();
+        shoppingCart.updateRecentUpdateTime();
         return shoppingCart;
     }
 

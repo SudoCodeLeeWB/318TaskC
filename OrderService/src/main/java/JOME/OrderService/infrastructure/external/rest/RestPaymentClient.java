@@ -27,6 +27,7 @@ public class RestPaymentClient {
     // just a mock , it will return HTTP response, but for now, we will just read the result from it, and return the boolean
     // instead of payment Details ( for matching the payment details )
 
+    // TODO : Also needs to be a CustomerDTO, not to expose domain elements to other parts
     public boolean processPayment( Customer customer ){
 
         return true;

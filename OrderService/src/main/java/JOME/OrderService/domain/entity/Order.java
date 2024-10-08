@@ -46,13 +46,13 @@ public class Order {
     /**
      * Will be used for OrderFactory
      * */
-    public Order( UUID customerId, boolean paymentStatus, double totalPrice, OrderStatus orderStatus, DeliveryAddress deliveryAddress , List<OrderLineItem> orderLineItemList , String customerName){
+    public Order( UUID customerId, boolean paymentStatus, double totalPrice, OrderStatus orderStatus, DeliveryAddress deliveryAddress , List<OrderLineItem> orderLineItemList , String customerName , LocalDateTime recentUpdateTime){
         this.customerId = customerId;
         this.paymentStatus = paymentStatus;
         this.totalPrice = totalPrice;
         this.orderStatus = orderStatus;
         this.deliveryAddress = deliveryAddress;
-        this.recentUpdateTime = LocalDateTime.now();
+        this.recentUpdateTime = recentUpdateTime;
         this.orderLineItemList = orderLineItemList;
         this.customerName = customerName;
 
@@ -100,13 +100,6 @@ public class Order {
     }
 
 
-    /**
-     * Calculate total price TODO
-     */
-    public void calculateTotalPrice(){
-
-        this.totalPrice = 0;
-    }
 
 
     // getters and setters
@@ -170,5 +163,13 @@ public class Order {
 
     public void setCustomerName(String customerName) {
         this.customerName = customerName;
+    }
+
+    public List<OrderLineItem> getOrderLineItemList() {
+        return orderLineItemList;
+    }
+
+    public void setOrderLineItemList(List<OrderLineItem> orderLineItemList) {
+        this.orderLineItemList = orderLineItemList;
     }
 }

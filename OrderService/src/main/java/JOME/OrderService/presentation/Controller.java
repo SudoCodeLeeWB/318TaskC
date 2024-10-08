@@ -22,6 +22,21 @@ public class Controller {
 
     // Add REST Mappings HERE
 
+    // usecase 1 : Add new product to the shoppingCart
+
+
+    // usecase 2 : add product quantity to the shopping cart
+
+
+    // usecase 3 : remove product quantity from the shopping cart
+
+
+    // usecase 4 : place order
+
+
+    // usecase 5 : Cancel Order
+
+
 
 
 

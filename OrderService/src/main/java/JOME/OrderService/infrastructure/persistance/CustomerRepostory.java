@@ -10,6 +10,6 @@ import java.util.UUID;
 // managed by event from UserService
 
 @Repository
-public interface CustomerRepostory extends JpaRepository<Customer , UUID> {
+public interface CustomerRepostory extends JpaRepository<Customer , Long> {
 
 }

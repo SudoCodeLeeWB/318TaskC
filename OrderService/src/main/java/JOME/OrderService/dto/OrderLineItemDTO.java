@@ -1,13 +1,12 @@
 package JOME.OrderService.dto;
 
 
-import JOME.OrderService.domain.entity.OrderLineItem;
-import JOME.OrderService.domain.entity.Product;
+import JOME.OrderService.domain.valueObject.OrderLineItem;
 
 public class OrderLineItemDTO {
 
-    private ProductDTO product;
-    private int quantity;
+    public ProductDTO product;
+    public int quantity;
 
 
     // constructor

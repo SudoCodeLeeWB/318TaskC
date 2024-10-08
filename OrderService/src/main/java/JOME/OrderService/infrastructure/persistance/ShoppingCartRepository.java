@@ -12,7 +12,7 @@ import java.util.UUID;
 
 
 @Repository
-public interface ShoppingCartRepository extends JpaRepository<ShoppingCart , UUID> {
-    Optional<ShoppingCart> findByCustomerId(UUID customerId);
+public interface ShoppingCartRepository extends JpaRepository<ShoppingCart , Long> {
+    Optional<ShoppingCart> findByCustomerId(Long customerId);
 
 }

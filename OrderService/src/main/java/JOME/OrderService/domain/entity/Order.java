@@ -1,32 +1,33 @@
 package JOME.OrderService.domain.entity;
 
 import JOME.OrderService.domain.valueObject.DeliveryAddress;
+import JOME.OrderService.domain.valueObject.OrderLineItem;
 import JOME.OrderService.domain.valueObject.OrderStatus;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 
 // Order -> Root Aggregate
 @Entity
+@Table(name = "orders")
 public class Order {
 
 
     @Id
     @GeneratedValue( strategy = GenerationType.IDENTITY)
-    private UUID id;
-    private UUID customerId;
+    private Long id;
+    private Long customerId;
     private String customerName;
     private boolean paymentStatus;
     private double totalPrice;
     private LocalDateTime recentUpdateTime;
 
-    // Entities
-    @OneToMany ( cascade = CascadeType.ALL , orphanRemoval = true)  // set up Cascade settings
-    private List<OrderLineItem> orderLineItemList;
+    @ElementCollection
+    @CollectionTable
+    private List<OrderLineItem> orderLineItemList = new ArrayList<>();
 
     // value objects
     @Enumerated
@@ -46,13 +47,13 @@ public class Order {
     /**
      * Will be used for OrderFactory
      * */
-    public Order( UUID customerId, boolean paymentStatus, double totalPrice, OrderStatus orderStatus, DeliveryAddress deliveryAddress , List<OrderLineItem> orderLineItemList , String customerName){
+    public Order( Long customerId, boolean paymentStatus, double totalPrice, OrderStatus orderStatus, DeliveryAddress deliveryAddress , List<OrderLineItem> orderLineItemList , String customerName , LocalDateTime recentUpdateTime){
         this.customerId = customerId;
         this.paymentStatus = paymentStatus;
         this.totalPrice = totalPrice;
         this.orderStatus = orderStatus;
         this.deliveryAddress = deliveryAddress;
-        this.recentUpdateTime = LocalDateTime.now();
+        this.recentUpdateTime = recentUpdateTime;
         this.orderLineItemList = orderLineItemList;
         this.customerName = customerName;
 
@@ -100,13 +101,6 @@ public class Order {
     }
 
 
-    /**
-     * Calculate total price TODO
-     */
-    public void calculateTotalPrice(){
-
-        this.totalPrice = 0;
-    }
 
 
     // getters and setters
@@ -115,20 +109,20 @@ public class Order {
     }
 
 
-    public void setId(UUID id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public UUID getId() {
+    public Long getId() {
         return id;
     }
 
 
-    public UUID getCustomerId() {
+    public Long getCustomerId() {
         return customerId;
     }
 
-    public void setCustomerId(UUID customerId) {
+    public void setCustomerId(Long customerId) {
         this.customerId = customerId;
     }
 
@@ -170,5 +164,13 @@ public class Order {
 
     public void setCustomerName(String customerName) {
         this.customerName = customerName;
+    }
+
+    public List<OrderLineItem> getOrderLineItemList() {
+        return orderLineItemList;
+    }
+
+    public void setOrderLineItemList(List<OrderLineItem> orderLineItemList) {
+        this.orderLineItemList = orderLineItemList;
     }
 }

@@ -3,12 +3,14 @@ package JOME.OrderService.domain.factory;
 
 import JOME.OrderService.domain.entity.Customer;
 import JOME.OrderService.domain.entity.Order;
+import JOME.OrderService.domain.valueObject.OrderLineItem;
 import JOME.OrderService.domain.entity.ShoppingCart;
-import JOME.OrderService.domain.valueObject.DeliveryAddress;
 import JOME.OrderService.domain.valueObject.OrderStatus;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 // Factory pattern for Order
 
@@ -22,6 +24,8 @@ public class OrderFactory {
     */
     public Order createOrder(ShoppingCart shoppingCart , Customer customer ){
 
+        List<OrderLineItem> orderLineItemListCopy = new ArrayList<>(shoppingCart.getOrderLineItemList());
+
         // manage init state here
         Order newOrder = new Order(
                 shoppingCart.getCustomerId(),
@@ -29,8 +33,9 @@ public class OrderFactory {
                 shoppingCart.getTotalPrice(),
                 OrderStatus.Pending,
                 customer.getDeliveryAddress(),
-                shoppingCart.getOrderLineItemList(),
-                customer.getName()
+                orderLineItemListCopy,
+                customer.getName(),
+                LocalDateTime.now()
         );
 
         return newOrder;

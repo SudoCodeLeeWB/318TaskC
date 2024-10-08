@@ -17,10 +17,10 @@ import JOME.OrderService.infrastructure.persistance.CustomerRepostory;
 import JOME.OrderService.infrastructure.persistance.OrderRepository;
 import JOME.OrderService.infrastructure.persistance.ProductRepository;
 import JOME.OrderService.infrastructure.persistance.ShoppingCartRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 public class OrderService {
@@ -63,7 +63,7 @@ public class OrderService {
 
 
     // 1. Add a new product to the shopping cart
-    public ShoppingCartDTO addNewOrderLineItemToShoppingCart(UUID customerId , UUID productId , int quantity) {
+    public ShoppingCartDTO addNewOrderLineItemToShoppingCart(Long customerId , Long productId , int quantity) {
 
         // setup shopping cart
         Optional<ShoppingCart> recentShoppingCart = shoppingCartRepository.findByCustomerId(customerId);
@@ -82,7 +82,7 @@ public class OrderService {
 
 
     // 2. Change the Quantity of a OrderLineProduct ( shopping cart ) - Delete
-    public ShoppingCartDTO deleteOrderLineItemQuantity( UUID customerId, UUID productId , int quantity ){
+    public ShoppingCartDTO deleteOrderLineItemQuantity( Long customerId, Long productId , int quantity ){
 
         //setup shopping cart
         Optional<ShoppingCart> recentShoppingCart = shoppingCartRepository.findByCustomerId(customerId);
@@ -97,7 +97,7 @@ public class OrderService {
 
     // 3. Change the Quantity of a OrderLineProduct ( shopping cart ) - Add
 
-    public ShoppingCartDTO addOrderLineItemQuantity( UUID customerId , UUID productId , int quantity ){
+    public ShoppingCartDTO addOrderLineItemQuantity( Long customerId , Long productId , int quantity ){
 
         //setup shopping cart
         Optional<ShoppingCart> recentShoppingCart = shoppingCartRepository.findByCustomerId(customerId);
@@ -112,7 +112,8 @@ public class OrderService {
 
 
     // 3. Place Order
-    public Order placeOrder( UUID customerId ){
+    @Transactional
+    public OrderDTO placeOrder( Long customerId ){
 
         // find Shopping Cart
         Optional<ShoppingCart> recentShoppingCart = shoppingCartRepository.findByCustomerId(customerId);
@@ -125,42 +126,55 @@ public class OrderService {
         // convert shopping cart into Order
         Order newOrder = orderFactory.createOrder(currentShoppingCart , currentCustomer);
 
-
         // process payment of this order
         boolean paymentResult = restPaymentClient.processPayment(currentCustomer);
 
 
-        // Change the state of the Order - call orderDomain Service here
+        if(paymentResult){
+            // end of ShoppingCartLifeCycle
+            currentShoppingCart.getOrderLineItemList().clear();
+            shoppingCartRepository.delete(currentShoppingCart);
+
+            // Raise New Event : OrderPlaced Event
+
+        }
 
 
+        // Change the state of the Order - call orderDomain Service here ( the state will be different based on the payment result )
+        Order savedResult = orderDomainService.placeOrder(newOrder , paymentResult);
 
-        // New Event : OrderPlaced Event
 
         // save the Order State
-        Order SavedState = orderRepository.save(newOrder);
+        Order SavedState = orderRepository.save(savedResult);
         return new OrderDTO(SavedState);
 
     }
 
-        // Convert Shopping cart to Order
-        // get delivery address from customerRepository
-        // get payment success from restPaymentClient & change the payment status
-        // if payment fail -> throw exception
-        // change orderStauts ( if exception => fail ) / ( if no exception => true )
-        // Event : new OrderPlaced Event
-        // return success
-
 
     // 4. Cancel Order
+   public OrderDTO cancelOrder(Long orderId){
 
-        // change OrderStatus
-        // Event : new OrderCanceled Event
-        // return success
+        // find order from Repository
+        Optional<Order> order = orderRepository.findById(orderId);
+        Order currentOrder = order.orElseThrow( () -> new RuntimeException());
+
+
+        // Raise New Event : OrderCanceled Event
+
+
+        // change state of this order
+        Order savedResult = orderDomainService.cancelOrder(currentOrder);
+        Order savedState = orderRepository.save(savedResult);
+        return new OrderDTO(savedState);
+
+   }
 
 
 
 
-    // additional use case from others ( customer repository management )
+
+
+    // Usage from others ( customer repository management )
 
     // Kafka subscribe
 

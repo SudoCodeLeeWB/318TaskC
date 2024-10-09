@@ -1,4 +1,4 @@
-package JOME.ShippingService;
+package JOME.ProductService;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

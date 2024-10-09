@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.util.UUID;
 
 // A repository to store the product data
-// managed by ProductService Event => Subscribe
+// managed by ShippingService Event => Subscribe
 
 
 @Repository

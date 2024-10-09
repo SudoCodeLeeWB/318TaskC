@@ -1,55 +1,40 @@
-package JOME.ProductService.domain.entity;
+package JOME.ProductService.domain.event;
 
+import JOME.ProductService.domain.entity.Product;
 import JOME.ProductService.domain.valueObject.CategoryEnum;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 
 import java.time.LocalDateTime;
 
-@Entity
-public class Product {
+public class AddNewProductEvent {
 
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long Id;
     private String name;
     private String description;
     private double price;
     private int stock;
     private CategoryEnum category;
     private LocalDateTime recentUpdateTime;
+    private LocalDateTime eventCreateTime;
 
 
+    // constructor for translating the Product
+    public AddNewProductEvent() {}
 
+    public AddNewProductEvent(Product product) {
 
-    // constructor
-    protected Product(){}
+        this.Id = product.getId();
+        this.name = product.getName();
+        this.description = product.getDescription();
+        this.price = product.getPrice();
+        this.stock = product.getStock();
+        this.category = product.getCategory();
+        this.recentUpdateTime = product.getRecentUpdateTime();
+        this.eventCreateTime = LocalDateTime.now();
 
-    public Product(String name, String description, double price, int stock, CategoryEnum category , LocalDateTime recentUpdateTime) {
-        this.name = name;
-        this.description = description;
-        this.price = price;
-        this.stock = stock;
-        this.category = category;
-        this.recentUpdateTime = recentUpdateTime;
     }
 
-    // update time
-    public void updateRecentUpdateTime(){
-        this.recentUpdateTime = LocalDateTime.now();
-    }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
+    // getters and setters
     public String getName() {
         return name;
     }
@@ -97,4 +82,14 @@ public class Product {
     public void setRecentUpdateTime(LocalDateTime recentUpdateTime) {
         this.recentUpdateTime = recentUpdateTime;
     }
+
+
+    public LocalDateTime getEventCreateTime() {
+        return eventCreateTime;
+    }
+
+    public void setEventCreateTime(LocalDateTime eventCreateTime) {
+        this.eventCreateTime = eventCreateTime;
+    }
 }
+

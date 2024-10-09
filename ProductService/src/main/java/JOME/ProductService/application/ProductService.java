@@ -1,6 +1,7 @@
 package JOME.ProductService.application;
 
 import JOME.ProductService.domain.entity.Product;
+import JOME.ProductService.domain.event.AddNewProductEvent;
 import JOME.ProductService.domain.factory.ProductFactory;
 import JOME.ProductService.domain.service.ProductDomainService;
 import JOME.ProductService.domain.valueObject.CategoryEnum;
@@ -54,6 +55,8 @@ public class ProductService {
         // this id will be used for same in other databases ( persistence )
 
         // Raise new event = AddNewProductEvent
+        AddNewProductEvent event = new AddNewProductEvent(savedResult);
+        kafkaProducerService.sendProductAddEvent(event);
 
 
         return new ProductDTO(savedResult);

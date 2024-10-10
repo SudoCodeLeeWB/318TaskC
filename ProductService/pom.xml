@@ -70,7 +70,7 @@
 
 
 
-		<!-- Dependency for shared Event-->
+<!--		 Dependency for shared Event-->
 		<dependency>
 			<groupId>JOME</groupId>
 			<artifactId>shared-events</artifactId>

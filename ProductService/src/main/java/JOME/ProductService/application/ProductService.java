@@ -2,6 +2,8 @@ package JOME.ProductService.application;
 
 import JOME.ProductService.domain.entity.Product;
 import JOME.ProductService.domain.event.AddNewProductEvent;
+import JOME.ProductService.domain.event.ProductDeleteEvent;
+import JOME.ProductService.domain.event.UpdateProductStockEvent;
 import JOME.ProductService.domain.factory.ProductFactory;
 import JOME.ProductService.domain.service.ProductDomainService;
 import JOME.ProductService.domain.valueObject.CategoryEnum;
@@ -82,9 +84,9 @@ public class ProductService {
 
         // for persistence -> when it is saved, then it will have an id,
         // this id will be used for same in other databases ( persistence )
-
         // Raise New Event = UpdateProductStockEvent
-
+        UpdateProductStockEvent event = new UpdateProductStockEvent(savedResult);
+        kafkaProducerService.sendProductUpdateEvent(event);
 
         return new ProductDTO(savedResult);
 
@@ -99,15 +101,18 @@ public class ProductService {
         Optional<Product> findProduct = productRepository.findById(productId);
         Product targetProduct = findProduct.orElseThrow(()-> new RuntimeException());
 
-        // temp Name Storing for return
+        // temp Name Storing for return resut & send message
         String targetProductName = targetProduct.getName();
+        Long deletionId = targetProduct.getId();
 
         // delete the product from product repository
         productRepository.delete(targetProduct);
 
 
         // Raise New Event : ProductDeleteEvent
-        Long deletionId = targetProduct.getId();
+        ProductDeleteEvent event = new ProductDeleteEvent(deletionId);
+        kafkaProducerService.sendProductDeleteEvent(event);
+
 
         return "Deleted Product : " + targetProductName ;
 

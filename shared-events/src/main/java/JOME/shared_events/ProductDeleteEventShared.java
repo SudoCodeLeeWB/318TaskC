@@ -1,18 +1,15 @@
-package JOME.ProductService.domain.event;
-
-import JOME.ProductService.domain.entity.Product;
-
+package JOME.shared_events;
 import java.time.LocalDateTime;
 
-public class ProductDeleteEvent {
+public class ProductDeleteEventShared {
 
 
     private Long Id;
     private LocalDateTime eventCreateTime;
 
-    public ProductDeleteEvent(){}
+    public ProductDeleteEventShared(){}
 
-    public ProductDeleteEvent( Long Id ){
+    public ProductDeleteEventShared(Long Id ){
 
         this.Id = Id;
         this.eventCreateTime = LocalDateTime.now();

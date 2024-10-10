@@ -67,6 +67,18 @@
 			<artifactId>spring-cloud-stream-test-binder</artifactId>
 			<scope>test</scope>
 		</dependency>
+
+
+
+		<!-- Dependency for shared Event-->
+		<dependency>
+			<groupId>JOME</groupId>
+			<artifactId>shared-events</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+
+
+
 	</dependencies>
 	<dependencyManagement>
 		<dependencies>
@@ -77,6 +89,7 @@
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
+
 		</dependencies>
 	</dependencyManagement>
 

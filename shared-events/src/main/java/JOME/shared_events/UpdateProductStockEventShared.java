@@ -1,11 +1,8 @@
-package JOME.ProductService.domain.event;
-
-import JOME.ProductService.domain.entity.Product;
-import JOME.ProductService.domain.valueObject.CategoryEnum;
+package JOME.shared_events;
 
 import java.time.LocalDateTime;
 
-public class UpdateProductStockEvent {
+public class UpdateProductStockEventShared {
 
 
     private Long Id;
@@ -15,18 +12,15 @@ public class UpdateProductStockEvent {
 
 
 
-    public UpdateProductStockEvent(){}
+    public UpdateProductStockEventShared(){}
 
 
-    public UpdateProductStockEvent(Product product){
-
-        this.Id = product.getId();
-        this.stock = product.getStock();
-        this.recentUpdateTime = product.getRecentUpdateTime();
+    public UpdateProductStockEventShared(Long id, int stock, LocalDateTime recentUpdateTime) {
+        this.Id = id;
+        this.stock = stock;
+        this.recentUpdateTime = recentUpdateTime;
         this.eventCreateTime = LocalDateTime.now();
-
     }
-
 
 
     public Long getId() {

@@ -12,7 +12,6 @@ public class AddNewProductEvent {
     private String description;
     private double price;
     private int stock;
-    private CategoryEnum category;
     private LocalDateTime recentUpdateTime;
     private LocalDateTime eventCreateTime;
 
@@ -27,7 +26,6 @@ public class AddNewProductEvent {
         this.description = product.getDescription();
         this.price = product.getPrice();
         this.stock = product.getStock();
-        this.category = product.getCategory();
         this.recentUpdateTime = product.getRecentUpdateTime();
         this.eventCreateTime = LocalDateTime.now();
 
@@ -67,13 +65,6 @@ public class AddNewProductEvent {
         this.stock = stock;
     }
 
-    public CategoryEnum getCategory() {
-        return category;
-    }
-
-    public void setCategory(CategoryEnum category) {
-        this.category = category;
-    }
 
     public LocalDateTime getRecentUpdateTime() {
         return recentUpdateTime;
@@ -90,6 +81,14 @@ public class AddNewProductEvent {
 
     public void setEventCreateTime(LocalDateTime eventCreateTime) {
         this.eventCreateTime = eventCreateTime;
+    }
+
+    public Long getId() {
+        return Id;
+    }
+
+    public void setId(Long id) {
+        Id = id;
     }
 }
 

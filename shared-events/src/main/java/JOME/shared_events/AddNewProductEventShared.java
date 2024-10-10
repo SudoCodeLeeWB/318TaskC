@@ -1,54 +1,36 @@
-package JOME.ProductService.domain.entity;
+package JOME.shared_events;
 
-import JOME.ProductService.domain.valueObject.CategoryEnum;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+
 
 import java.time.LocalDateTime;
 
-@Entity
-public class Product {
+public class AddNewProductEventShared {
 
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long Id;
     private String name;
     private String description;
     private double price;
     private int stock;
-    private CategoryEnum category;
     private LocalDateTime recentUpdateTime;
+    private LocalDateTime eventCreateTime;
 
 
+    // constructor for translating the Product
+    public AddNewProductEventShared() {}
 
-    // constructor
-    protected Product(){}
-
-    public Product(String name, String description, double price, int stock, CategoryEnum category , LocalDateTime recentUpdateTime) {
+    public AddNewProductEventShared(Long id, String name, String description, double price, int stock, LocalDateTime recentUpdateTime) {
+        this.Id = id;
         this.name = name;
         this.description = description;
         this.price = price;
         this.stock = stock;
-        this.category = category;
         this.recentUpdateTime = recentUpdateTime;
+        this.eventCreateTime = LocalDateTime.now();
     }
 
-    // update time
-    public void updateRecentUpdateTime(){
-        this.recentUpdateTime = LocalDateTime.now();
-    }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
 
-    public Long getId() {
-        return id;
-    }
-
+    // getters and setters
     public String getName() {
         return name;
     }
@@ -81,13 +63,6 @@ public class Product {
         this.stock = stock;
     }
 
-    public CategoryEnum getCategory() {
-        return category;
-    }
-
-    public void setCategory(CategoryEnum category) {
-        this.category = category;
-    }
 
     public LocalDateTime getRecentUpdateTime() {
         return recentUpdateTime;
@@ -96,4 +71,22 @@ public class Product {
     public void setRecentUpdateTime(LocalDateTime recentUpdateTime) {
         this.recentUpdateTime = recentUpdateTime;
     }
+
+
+    public LocalDateTime getEventCreateTime() {
+        return eventCreateTime;
+    }
+
+    public void setEventCreateTime(LocalDateTime eventCreateTime) {
+        this.eventCreateTime = eventCreateTime;
+    }
+
+    public Long getId() {
+        return Id;
+    }
+
+    public void setId(Long id) {
+        Id = id;
+    }
 }
+

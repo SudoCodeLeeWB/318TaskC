@@ -1,0 +1,48 @@
+server:
+  port: 8080
+spring:
+  main:
+    web-application-type: reactive
+  cloud:
+    gateway:
+      routes:
+        - id: order-service
+          uri: http://localhost:8082
+          predicates:
+            - Path=/order/**
+          filters:
+            - name: StripPrefix
+              args:
+                parts: 1
+        - id: product-service
+          uri: http://localhost:8081
+          predicates:
+            - Path=/product/**
+          filters:
+            - name: StripPrefix
+              args:
+                parts: 1
+        - id: Shipping-service
+          uri: http://localhost:8084
+          predicates:
+            - Path=/shipping/**
+          filters:
+            - name: StripPrefix
+              args:
+                parts: 1
+        - id: user-service
+          uri: http://localhost:8083
+          predicates:
+            - Path=/user/**
+          filters:
+            - name: StripPrefix
+              args:
+                parts: 1
+        - id: analysis-service
+          uri: http://localhost:8085
+          predicates:
+            - Path=/analysis/**
+          filters:
+            - name: StripPrefix
+              args:
+                parts: 1

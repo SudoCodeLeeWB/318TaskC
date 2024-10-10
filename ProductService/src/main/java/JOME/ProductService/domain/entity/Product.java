@@ -1,35 +1,44 @@
-package JOME.OrderService.domain.entity;
+package JOME.ProductService.domain.entity;
 
+import JOME.ProductService.domain.valueObject.CategoryEnum;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 import java.time.LocalDateTime;
 
-
-// will be saved to the repository
-
 @Entity
 public class Product {
 
+
     @Id
-    private Long id;  // same value from Product Microservice
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private String name;
+    private String description;
     private double price;
     private int stock;
+    private CategoryEnum category;
     private LocalDateTime recentUpdateTime;
 
 
-    // To be used for JPA Table creating
+
+    // constructor
     protected Product(){}
 
-
-    // to be used for ACL
-    public Product( Long Id , String name , double price , int stock , LocalDateTime recentUpdateTime){
-        this.id = Id;
+    public Product(String name, String description, double price, int stock, CategoryEnum category , LocalDateTime recentUpdateTime) {
         this.name = name;
+        this.description = description;
         this.price = price;
         this.stock = stock;
+        this.category = category;
         this.recentUpdateTime = recentUpdateTime;
+    }
+
+    // update time
+    public void updateRecentUpdateTime(){
+        this.recentUpdateTime = LocalDateTime.now();
     }
 
     public void setId(Long id) {
@@ -48,6 +57,14 @@ public class Product {
         this.name = name;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     public double getPrice() {
         return price;
     }
@@ -56,13 +73,20 @@ public class Product {
         this.price = price;
     }
 
-
     public int getStock() {
         return stock;
     }
 
     public void setStock(int stock) {
         this.stock = stock;
+    }
+
+    public CategoryEnum getCategory() {
+        return category;
+    }
+
+    public void setCategory(CategoryEnum category) {
+        this.category = category;
     }
 
     public LocalDateTime getRecentUpdateTime() {

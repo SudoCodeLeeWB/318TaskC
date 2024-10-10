@@ -13,9 +13,6 @@ public class InfrastructureConfig {
         return new RestTemplate();
     }
 
-    // add new configs for Kafka here
-
-
 
 
 }

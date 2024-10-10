@@ -151,25 +151,160 @@ And we Also have other microservices that are not a part of a problem domain, su
 * Api GateWay ( ApiGW ) to route user's Rest calls. 
 
 ___
+
 ## Sample CURL Api Calls :
 
 ### Use case 1 : **Add new Product to Order**
-* Os :  
   
 Windows Powershell
 ```shell
-
+Invoke-RestMethod -Uri 'http://localhost:8080/order/addNew/1/1/1' -Method Patch
 ```
 Windows Cmd
 ```shell
-
+curl --location --request PATCH "http://localhost:8080/order/addNew/1/1/1"
 ```
 MacOs / Linux
 ```shell
-
+curl --location --request PATCH 'http://localhost:8080/order/addNew/1/1/1'
 ```
 
-### Use case 2 : **Add new Product to Order**
+### Use case 2 : **Increase quantity of an existing product**
+
+Windows Powershell
+```shell
+Invoke-RestMethod -Uri 'http://localhost:8080/order/add/1/1/1' -Method Patch
+```
+Windows Cmd
+```shell
+curl --location --request PATCH "http://localhost:8080/order/add/1/1/1"
+```
+MacOs / Linux
+```shell
+curl --location --request PATCH 'http://localhost:8080/order/add/1/1/1'
+```
+
+
+### Use case 3 : **Deduct quantity of an existing product **
+
+Windows Powershell
+```shell
+Invoke-RestMethod -Uri 'http://localhost:8080/order/remove/1/1/1' -Method Patch
+```
+Windows Cmd
+```shell
+curl --location --request PATCH "http://localhost:8080/order/remove/1/1/1"
+```
+MacOs / Linux
+```shell
+curl --location --request PATCH 'http://localhost:8080/order/remove/1/1/1'
+```
+
+### Use case 4 : **Place Order**
+
+Windows Powershell
+```shell
+Invoke-RestMethod -Uri 'http://localhost:8080/order/placeOrder/1' -Method Patch
+```
+Windows Cmd
+```shell
+curl --location --request PATCH "http://localhost:8080/order/placeOrder/1"
+```
+MacOs / Linux
+```shell
+curl --location --request PATCH 'http://localhost:8080/order/placeOrder/1'
+```
+
+### Use case 5 : **Cancel Order**
+
+Windows Powershell
+```shell
+Invoke-RestMethod -Uri 'http://localhost:8080/order/cancelOrder/1' -Method Patch
+```
+Windows Cmd
+```shell
+curl --location --request PATCH "http://localhost:8080/order/cancelOrder/1"
+```
+MacOs / Linux
+```shell
+curl --location --request PATCH 'http://localhost:8080/order/cancelOrder/1'
+```
+
+### Use case 7 : **Add new Product into Product Service**
+
+Windows Powershell
+```shell
+Invoke-RestMethod -Uri 'http://localhost:8080/product/add' -Method Post -ContentType 'application/json' -Body '{
+    "name": "Smartphone",
+    "description": "Latest smartphone model",
+    "price": 999.99,
+    "stock": 50,
+    "category": "ELECTRONICS"
+}'
+```
+Windows Cmd
+```shell
+curl --location "http://localhost:8080/product/add" ^
+--header "Content-Type: application/json" ^
+--data "{
+    \"name\": \"Smartphone\",
+    \"description\": \"Latest smartphone model\",
+    \"price\": 999.99,
+    \"stock\": 50,
+    \"category\": \"ELECTRONICS\"
+}"
+```
+MacOs / Linux
+```shell
+curl --location 'http://localhost:8080/product/add' \
+--header 'Content-Type: application/json' \
+--data '{
+    "name": "Smartphone",
+    "description": "Latest smartphone model",
+    "price": 999.99,
+    "stock": 50,
+    "category": "ELECTRONICS"
+}'
+```
+
+### Use case 8 : **Update Product Stock**
+
+Windows Powershell
+```shell
+Invoke-RestMethod -Uri 'http://localhost:8080/product/updateStock/1/20' -Method Patch -ContentType 'application/json'
+```
+Windows Cmd
+```shell
+curl --location --request PATCH "http://localhost:8080/product/updateStock/1/20" ^
+--header "Content-Type: application/json"
+```
+MacOs / Linux
+```shell
+curl --location --request PATCH 'http://localhost:8080/product/updateStock/1/20' \
+--header 'Content-Type: application/json'
+```
+
+
+### Use case 9 : **Delete Product From Product Service**
+
+Windows Powershell
+```shell
+Invoke-RestMethod -Uri 'http://localhost:8080/product/delete/1' -Method Delete -ContentType 'application/json'
+```
+Windows Cmd
+```shell
+curl --location --request DELETE "http://localhost:8080/product/delete/1" ^
+--header "Content-Type: application/json"
+```
+MacOs / Linux
+```shell
+curl --location --request DELETE 'http://localhost:8080/product/delete/1' \
+--header 'Content-Type: application/json'
+```
+
+
+
+### Use case 10 : ** **
 
 Windows Powershell
 ```shell
@@ -182,87 +317,8 @@ Windows Cmd
 MacOs / Linux
 ```shell
 
-```
-
-
-### Use case 2 : **Add new Product to Order**
-
-Windows Powershell
-```shell
 
 ```
-Windows Cmd
-```shell
-
-```
-MacOs / Linux
-```shell
-
-```
-
-### Use case 2 : **Add new Product to Order**
-
-Windows Powershell
-```shell
-
-```
-Windows Cmd
-```shell
-
-```
-MacOs / Linux
-```shell
-
-```
-
-### Use case 2 : **Add new Product to Order**
-
-Windows Powershell
-```shell
-
-```
-Windows Cmd
-```shell
-
-```
-MacOs / Linux
-```shell
-
-```
-
-### Use case 2 : **Add new Product to Order**
-
-Windows Powershell
-```shell
-
-```
-Windows Cmd
-```shell
-
-```
-MacOs / Linux
-```shell
-
-```
-
-### Use case 2 : **Add new Product to Order**
-
-Windows Powershell
-```shell
-
-```
-Windows Cmd
-```shell
-
-```
-MacOs / Linux
-```shell
-
-```
-
-
-
-
 
 
 

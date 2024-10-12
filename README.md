@@ -65,7 +65,7 @@ bin/kafka-console-producer.sh --topic test-topic --bootstrap-server localhost:90
 ```
 
 
-Open Another terminal , go to the same kafka path
+Open Another terminal , go to the same kafka path 
 * Consume a test message ( consumer )
 ```shell
 bin/kafka-console-consumer.sh --topic test-topic --from-beginning --bootstrap-server localhost:9092

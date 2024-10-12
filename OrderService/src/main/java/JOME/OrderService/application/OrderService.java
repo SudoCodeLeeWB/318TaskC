@@ -8,6 +8,8 @@ import JOME.OrderService.domain.entity.Customer;
 import JOME.OrderService.domain.entity.Order;
 import JOME.OrderService.domain.entity.Product;
 import JOME.OrderService.domain.entity.ShoppingCart;
+import JOME.OrderService.domain.event.OrderCanceledEvent;
+import JOME.OrderService.domain.event.OrderPlacedEvent;
 import JOME.OrderService.domain.factory.OrderFactory;
 import JOME.OrderService.domain.factory.ShoppingCartFactory;
 import JOME.OrderService.domain.service.OrderDomainService;
@@ -21,9 +23,7 @@ import JOME.OrderService.infrastructure.persistance.CustomerRepostory;
 import JOME.OrderService.infrastructure.persistance.OrderRepository;
 import JOME.OrderService.infrastructure.persistance.ProductRepository;
 import JOME.OrderService.infrastructure.persistance.ShoppingCartRepository;
-import JOME.shared_events.AddNewProductEventShared;
-import JOME.shared_events.ProductDeleteEventShared;
-import JOME.shared_events.UpdateProductStockEventShared;
+import JOME.shared_events.*;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -102,8 +102,8 @@ public class OrderService {
 
     }
 
-    // 3. Change the Quantity of a OrderLineProduct ( shopping cart ) - Add
 
+    // 3. Change the Quantity of a OrderLineProduct ( shopping cart ) - Add
     public ShoppingCartDTO addOrderLineItemQuantity( Long customerId , Long productId , int quantity ){
 
         //setup shopping cart
@@ -118,7 +118,7 @@ public class OrderService {
     }
 
 
-    // 3. Place Order
+    // 4. Place Order
     @Transactional
     public OrderDTO placeOrder( Long customerId ){
 
@@ -143,11 +143,15 @@ public class OrderService {
             shoppingCartRepository.delete(currentShoppingCart);
 
             // Raise New Event : OrderPlaced Event
+            OrderPlacedEvent orderPlacedEvent = new OrderPlacedEvent(newOrder);
+            kafkaProducerService.sendOrderPlacedEvent(orderPlacedEvent);
+
 
         }
 
 
-        // Change the state of the Order - call orderDomain Service here ( the state will be different based on the payment result )
+        // Change the state of the Order - call orderDomain Service here
+        // ( the state will be different based on the payment result )
         Order savedResult = orderDomainService.placeOrder(newOrder , paymentResult);
 
 
@@ -158,8 +162,9 @@ public class OrderService {
     }
 
 
-    // 4. Cancel Order
-   public OrderDTO cancelOrder(Long orderId){
+    // 5. Cancel Order
+    @Transactional
+    public OrderDTO cancelOrder(Long orderId){
 
         // find order from Repository
         Optional<Order> order = orderRepository.findById(orderId);
@@ -167,6 +172,8 @@ public class OrderService {
 
 
         // Raise New Event : OrderCanceled Event
+        OrderCanceledEvent orderCanceledEvent = new OrderCanceledEvent(currentOrder);
+        kafkaProducerService.sendOrderCancelledEvent(orderCanceledEvent);
 
 
         // change state of this order
@@ -179,10 +186,7 @@ public class OrderService {
 
 
 
-
-
     // Usage from others ( customer repository management )
-
     // Kafka subscribe
 
     // for CustomerRRepository - CRUD
@@ -193,22 +197,18 @@ public class OrderService {
 
     // for ProductRepository - CRUD
     public void handleProductCreated(AddNewProductEventShared event){
-
         // apply ACL
         Product newProduct = ProductCreateEventMapper.mapFromEventToDomain(event);
-
         // Save it
         Product savedState = productRepository.save(newProduct);
-
-        // DEBUG :
-        System.out.println(savedState);
-
     }
+
+
+
     public void handleProductDeleted(ProductDeleteEventShared event){
 
         // apply ACL
         Long targetId = DeleteProductEventMapper.mapFromEventToDomain(event);
-
         productRepository.deleteById(targetId);
 
     }
@@ -216,7 +216,6 @@ public class OrderService {
 
 
     public void handleProductUpdated(UpdateProductStockEventShared event){
-
 
         Long targetProductId = event.getId();
         Optional<Product> targetProduct = productRepository.findById(targetProductId);
@@ -227,9 +226,6 @@ public class OrderService {
 
         // update product state
         Product savedState = productRepository.save(modifiedProduct);
-
-        // DEBUG :
-        System.out.println(event);
 
     }
 

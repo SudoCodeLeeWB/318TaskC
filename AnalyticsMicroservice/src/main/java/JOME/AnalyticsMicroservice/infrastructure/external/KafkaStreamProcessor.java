@@ -24,7 +24,10 @@ public class KafkaStreamProcessor {
 
                     // when it is OrderCanceled Event
                     .branch((key, value) -> value instanceof OrderCanceledEventShared,
-                            Branched.withConsumer(this::handleOrderCanceledEvent));
+                            Branched.withConsumer(this::handleOrderCanceledEvent))
+
+                    // DEBUG :
+                    .defaultBranch(Branched.withConsumer(stream -> System.out.println("Event does not match any known type: " + stream)));
         };
 
     }
@@ -37,6 +40,10 @@ public class KafkaStreamProcessor {
 
             // Perform Stateful & Aggregation / windowing here
 
+            // DEBUG :
+            System.out.println("OrderPlacedEventShared: " + event);
+            System.out.println(event);
+
 
         });
     }
@@ -47,8 +54,9 @@ public class KafkaStreamProcessor {
             OrderCanceledEventShared event = (OrderCanceledEventShared) value;
 
 
-
-            // Add your real-time analysis logic here
+            // DEBUG :
+            System.out.println("OrderCanceledEventShared: " + event);
+            System.out.println(event);
 
 
 

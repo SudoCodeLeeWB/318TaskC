@@ -1,7 +1,6 @@
 package JOME.OrderService.domain.entity;
 
 import JOME.OrderService.domain.valueObject.DeliveryAddress;
-import JOME.OrderService.domain.valueObject.OrderLineItem;
 import JOME.OrderService.domain.valueObject.OrderStatus;
 import jakarta.persistence.*;
 
@@ -24,9 +23,8 @@ public class Order {
     private double totalPrice;
     private LocalDateTime recentUpdateTime;
 
-    @ElementCollection
-    @CollectionTable
-    private List<OrderLineItem> orderLineItemList = new ArrayList<>();
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "order")
+    private List<OrderOrderLineItem> orderLineItemList = new ArrayList<>();
 
     // value objects
     @Enumerated
@@ -39,13 +37,13 @@ public class Order {
     // Constructor
 
     // For Serializing -> H2
-    protected Order(){}
+    public Order(){}
 
 
     /**
      * Will be used for OrderFactory
      * */
-    public Order( Long customerId, boolean paymentStatus, double totalPrice, OrderStatus orderStatus, DeliveryAddress deliveryAddress , List<OrderLineItem> orderLineItemList , String customerName , LocalDateTime recentUpdateTime){
+    public Order(Long customerId, boolean paymentStatus, double totalPrice, OrderStatus orderStatus, DeliveryAddress deliveryAddress , List<OrderOrderLineItem> orderLineItemList , String customerName , LocalDateTime recentUpdateTime){
         this.customerId = customerId;
         this.paymentStatus = paymentStatus;
         this.totalPrice = totalPrice;
@@ -57,7 +55,17 @@ public class Order {
 
     }
 
-
+    // Order address of OrderLineItemList ( Factory )
+    public void orderSetter( Long customerId, boolean paymentStatus, double totalPrice, OrderStatus orderStatus, DeliveryAddress deliveryAddress , List<OrderOrderLineItem> orderLineItemList , String customerName , LocalDateTime recentUpdateTime){
+        this.customerId = customerId;
+        this.paymentStatus = paymentStatus;
+        this.totalPrice = totalPrice;
+        this.orderStatus = orderStatus;
+        this.deliveryAddress = deliveryAddress;
+        this.recentUpdateTime = recentUpdateTime;
+        this.orderLineItemList = orderLineItemList;
+        this.customerName = customerName;
+    }
 
 
     /**
@@ -164,11 +172,11 @@ public class Order {
         this.customerName = customerName;
     }
 
-    public List<OrderLineItem> getOrderLineItemList() {
+    public List<OrderOrderLineItem> getOrderLineItemList() {
         return orderLineItemList;
     }
 
-    public void setOrderLineItemList(List<OrderLineItem> orderLineItemList) {
+    public void setOrderLineItemList(List<OrderOrderLineItem> orderLineItemList) {
         this.orderLineItemList = orderLineItemList;
     }
 }

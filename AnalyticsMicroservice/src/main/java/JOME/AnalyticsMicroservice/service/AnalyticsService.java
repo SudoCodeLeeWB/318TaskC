@@ -19,17 +19,21 @@ public class  AnalyticsService {
 
     // simplify : can extend the method fucntionality by getting the actual time as a parameter, but will not go there
     // ( since it is a demo )
+
+    // Access point for Aggregated Data
     public double getSalsesRecentOneMins(){
 
+
+
         return 0.0;
-
-
     }
 
     public int getNumberOfOrdersRecentOneMins(){
 
-        return 0;
 
+
+
+        return 0;
     }
 
 

@@ -1,33 +1,22 @@
 package JOME.OrderService.application;
 
-
-import JOME.OrderService.antiCorruption.DeleteProductEventMapper;
-import JOME.OrderService.antiCorruption.ProductCreateEventMapper;
-import JOME.OrderService.antiCorruption.UpdateProductStockEventMapper;
-import JOME.OrderService.domain.entity.Customer;
-import JOME.OrderService.domain.entity.Order;
-import JOME.OrderService.domain.entity.Product;
-import JOME.OrderService.domain.entity.ShoppingCart;
-import JOME.OrderService.domain.event.OrderCanceledEvent;
-import JOME.OrderService.domain.event.OrderPlacedEvent;
-import JOME.OrderService.domain.factory.OrderFactory;
-import JOME.OrderService.domain.factory.ShoppingCartFactory;
-import JOME.OrderService.domain.service.OrderDomainService;
-import JOME.OrderService.domain.service.ShoppingCartDomainService;
-import JOME.OrderService.dto.OrderDTO;
-import JOME.OrderService.dto.ShoppingCartDTO;
-
+import JOME.OrderService.antiCorruption.*;
+import JOME.OrderService.domain.entity.*;
+import JOME.OrderService.domain.event.*;
+import JOME.OrderService.domain.factory.*;
+import JOME.OrderService.dto.*;
+import JOME.OrderService.infrastructure.persistance.*;
+import JOME.shared_events.*;
 import JOME.OrderService.infrastructure.external.messaging.KafkaProducerService;
 import JOME.OrderService.infrastructure.external.rest.RestPaymentClient;
-import JOME.OrderService.infrastructure.persistance.CustomerRepostory;
-import JOME.OrderService.infrastructure.persistance.OrderRepository;
-import JOME.OrderService.infrastructure.persistance.ProductRepository;
-import JOME.OrderService.infrastructure.persistance.ShoppingCartRepository;
-import JOME.shared_events.*;
+import JOME.OrderService.domain.service.ShoppingCartDomainService;
+import JOME.OrderService.domain.service.OrderDomainService;
+
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
-
 import java.util.Optional;
+
+
 
 @Service
 public class OrderService {
@@ -65,11 +54,10 @@ public class OrderService {
 
 
 
-
     // Implementing use-cases
 
-
     // 1. Add a new product to the shopping cart
+    @Transactional
     public ShoppingCartDTO addNewOrderLineItemToShoppingCart(Long customerId , Long productId , int quantity) {
 
         // setup shopping cart
@@ -82,13 +70,15 @@ public class OrderService {
 
         // add product to the shopping cart ( delegate )
         ShoppingCart savedResult = shoppingCartDomainService.addNewProductToShoppingCart(currentShoppingCart, newProduct, quantity );
-        savedResult = shoppingCartRepository.save(savedResult); //  
+        savedResult = shoppingCartRepository.save(savedResult); //
 
         return new ShoppingCartDTO(savedResult);
     }
 
 
     // 2. Change the Quantity of a OrderLineProduct ( shopping cart ) - Delete
+
+    @Transactional
     public ShoppingCartDTO deleteOrderLineItemQuantity( Long customerId, Long productId , int quantity ){
 
         //setup shopping cart
@@ -104,6 +94,8 @@ public class OrderService {
 
 
     // 3. Change the Quantity of a OrderLineProduct ( shopping cart ) - Add
+
+    @Transactional
     public ShoppingCartDTO addOrderLineItemQuantity( Long customerId , Long productId , int quantity ){
 
         //setup shopping cart
@@ -112,7 +104,8 @@ public class OrderService {
 
         // Add product quantity from shopping cart ( delegate )
         ShoppingCart savedResult = shoppingCartDomainService.addProductQuantityFromShoppingCart(currentShoppingCart,productId, quantity );
-        savedResult = shoppingCartRepository.save(savedResult); //  
+        savedResult = shoppingCartRepository.save(savedResult);
+
         return new ShoppingCartDTO(savedResult);
 
     }
@@ -145,7 +138,6 @@ public class OrderService {
             // Raise New Event : OrderPlaced Event
             OrderPlacedEvent orderPlacedEvent = new OrderPlacedEvent(newOrder);
             kafkaProducerService.sendOrderPlacedEvent(orderPlacedEvent);
-
 
         }
 

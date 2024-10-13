@@ -2,6 +2,7 @@ package JOME.ShippingService.application;
 
 import JOME.ShippingService.domain.entity.Shipment;
 import JOME.ShippingService.repository.ShipmentRepository;
+import JOME.ShippingService.dto.ShipmentDTO;
 
 import org.springframework.stereotype.Service;
 
@@ -16,16 +17,18 @@ public class ShippingService {
         this.shipmentRepository = _shipmentRepository;
     }
 
-    public Shipment saveNewShipment(Long _orderID) {
-        Shipment newShipment = new Shipment(_orderID);
-        shipmentRepository.save(newShipment);
-        return newShipment;
-    }
-
     // CRUD USE CASES
     // Create a new shipment
+    public ShipmentDTO saveNewShipment(Long _orderID) {
+        Shipment newShipment = new Shipment(_orderID);
+        shipmentRepository.save(newShipment);
+        return new ShipmentDTO(newShipment);
+    }
 
-    // Read a shipment by ID
+    // Read a shipment by order ID
+    public Shipment getShipmentByOrderID(Long _orderID) {
+        return shipmentRepository.findByOrderID(_orderID);
+    }
 
     // Update a shipment status
 

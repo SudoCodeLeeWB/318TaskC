@@ -10,7 +10,7 @@ Task C for 318
 
 * Windows
 ```cmd
-curl -X POST -H "Content-Type:application/json" -d "{}" http://localhost:8085/shipment?orderID=23
+curl -X PATCH -H "Content-Type:application/json" -d "{}" http://localhost:8085/shipment?orderID=23
 ```
 
 #### Read shipment status

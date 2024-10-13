@@ -11,16 +11,15 @@ public class Shipment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long shipmentID;
-    @Embedded
-    private ShippingStatus shippingStatus;
     private Long orderID;
+    @Enumerated
+    private ShippingStatus shippingStatus;
 
-
-    // Shipment constructor to initialise a shippingStatus, order ID and delivery address
+    // Shipment constructor to initialise a shippingStatus, order ID
     public Shipment (){}
     public Shipment(Long _orderID) {
-        this.shippingStatus = ShippingStatus.NOT_SHIPPED;
         this.orderID = _orderID;
+        this.shippingStatus = ShippingStatus.NOT_SHIPPED;
     }
 
     // Function to get the ID of the shipment

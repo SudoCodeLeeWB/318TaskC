@@ -5,14 +5,14 @@ import JOME.ShippingService.domain.valueObject.ShippingStatus;
 
 public class ShipmentDTO {
 
-    public ShippingStatus shippingStatus;
     public Long orderID;
+    public ShippingStatus shippingStatus;
 
     public ShipmentDTO() {}
 
     public ShipmentDTO(Shipment shipment) {
-        this.shippingStatus = shipment.getShippingStatus();
         this.orderID = shipment.getOrderID();
+        this.shippingStatus = shipment.getShippingStatus();
     }
 
 

@@ -311,7 +311,7 @@ Windows Powershell
 ```
 Windows cmd (NOT THIS, TODO)
 ```cmd
-curl -X PATCH -H "Content-Type:application/json" -d "{}" http://localhost:8085/shipment?orderID=23
+curl -X PATCH -H "Content-Type:application/json" http://localhost:8085/shipment/updateStatus/100/SHIPPED
 ```
 
 MacOS / Linux
@@ -319,6 +319,13 @@ MacOS / Linux
 
 ```
 
+(temp)
+create shipment
+curl -X PATCH -H "Content-Type:application/json" http://localhost:8085/shipment/new/100
+get shipment by orderID
+curl -X GET http://localhost:8085/shipment/getByOrder/100
+delete shipment if not shipped
+curl -X DELETE -H "Content-Type:application/json" http://localhost:8085/shipment/delete/100
 
 
 

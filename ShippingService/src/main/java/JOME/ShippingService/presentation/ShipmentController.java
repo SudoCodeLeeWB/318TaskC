@@ -1,6 +1,5 @@
 package JOME.ShippingService.presentation;
 
-import JOME.ShippingService.domain.valueObject.DeliveryAddress;
 import JOME.ShippingService.repository.ShipmentRepository;
 import JOME.ShippingService.domain.entity.Shipment;
 import org.springframework.http.ResponseEntity;
@@ -16,14 +15,16 @@ public class ShipmentController {
 
     private ShippingService shippingService;
 
-    public ShipmentController(ShipmentRepository _shipmentRepository) {
+    public ShipmentController(ShipmentRepository _shipmentRepository, ShippingService _shippingService) {
         this.shipmentRepository = _shipmentRepository;
+        this.shippingService = _shippingService;
     }
 
+    // CRUD USE CASES
     // Creating a new shipment
     @PostMapping("/shipment")
-    Shipment createShipment(@RequestParam Long orderID, @RequestBody DeliveryAddress _deliveryAddress) {
-        return shippingService.saveNewShipment(orderID, _deliveryAddress);
+    Shipment createShipment(@RequestParam Long orderID) {
+        return shippingService.saveNewShipment(orderID);
     }
 
     // Getting shipment by ID
@@ -32,4 +33,9 @@ public class ShipmentController {
     Optional<Shipment> getShipmentByID(@PathVariable Long id) {
         return shipmentRepository.findById(id);
     }
+
+    // Updating shipment status
+
+    // Deleting a shipment
+
 }

@@ -1,6 +1,5 @@
 package JOME.ShippingService.domain.entity;
 
-import JOME.ShippingService.domain.valueObject.DeliveryAddress;
 import JOME.ShippingService.domain.valueObject.ShippingStatus;
 import jakarta.persistence.*;
 import org.springframework.stereotype.Component;
@@ -16,16 +15,12 @@ public class Shipment {
     private ShippingStatus shippingStatus;
     private Long orderID;
 
-    @Embedded
-    private DeliveryAddress deliveryAddress;
-
 
     // Shipment constructor to initialise a shippingStatus, order ID and delivery address
     public Shipment (){}
-    public Shipment(Long _orderID, DeliveryAddress _deliveryAddress) {
+    public Shipment(Long _orderID) {
         this.shippingStatus = ShippingStatus.NOT_SHIPPED;
         this.orderID = _orderID;
-        this.deliveryAddress = _deliveryAddress;
     }
 
     // Function to get the ID of the shipment
@@ -55,10 +50,5 @@ public class Shipment {
         } else {
             throw new RuntimeException(); // TODO: HAVE MESSAGE
         }
-    }
-
-    // Function to get the delivery address of the shipment
-    public DeliveryAddress getDeliveryAddress() {
-        return deliveryAddress;
     }
 }

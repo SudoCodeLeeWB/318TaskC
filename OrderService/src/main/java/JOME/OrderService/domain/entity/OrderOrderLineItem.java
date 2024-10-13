@@ -1,25 +1,37 @@
-package JOME.OrderService.domain.valueObject;
+package JOME.OrderService.domain.entity;
 
-import JOME.OrderService.domain.entity.Product;
 import jakarta.persistence.*;
 
 
+@Entity
+@Table(name = "order_order_line_item_list")
+public class OrderOrderLineItem {
 
-@Embeddable
-public class OrderLineItem {
+    @EmbeddedId
+    private OrderOrderLineItemId id;
 
-    @OneToOne
+    @ManyToOne
+    @MapsId("orderId")
+    @JoinColumn(name = "order_id")
+    private Order order;
+
+    @ManyToOne
+    @MapsId("productId")
+    @JoinColumn(name = "product_id")
     private Product product;
+
     private int quantity;
 
     // constructors
-    public OrderLineItem(){}
+    public OrderOrderLineItem(){}
 
-    public OrderLineItem( Product product, int quantity){
+    public OrderOrderLineItem( Order order, Product product, int quantity){
+        this.id = new OrderOrderLineItemId(order.getId(), product.getId());
         this.product = product;
         this.quantity = quantity;
-    }
+        this.order = order;
 
+    }
 
     /**
      * @return unit price * quantity
@@ -27,7 +39,6 @@ public class OrderLineItem {
     public double getSubtotalPrice(){
         return product.getPrice() * quantity;
     }
-
 
 
     // Getters and Setters

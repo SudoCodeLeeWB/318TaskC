@@ -40,6 +40,9 @@ public class KafkaProducerService {
         );
 
         kafkaTemplate.send( TOPIC ,sharedEvent);
+
+
+        System.out.println(sharedEvent);
     }
 
 

@@ -32,8 +32,6 @@ public class KafkaProducerService {
                 event.getCustomerId(),
                 event.getCustomerName(),
                 event.getTotalPrice(),
-                event.getRecentUpdateTime(),
-                event.getEventCreateTime(),
                 event.getStreet(),
                 event.getState(),
                 event.getCountry(),
@@ -50,8 +48,6 @@ public class KafkaProducerService {
         OrderCanceledEventShared sharedEvent = new OrderCanceledEventShared(
                 event.getId(),
                 event.getCustomerId(),
-                event.getRecentUpdateTime(),
-                event.getEventCreateTime(),
                 event.getTotalPrice()
         );
 

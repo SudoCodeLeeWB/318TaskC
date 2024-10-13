@@ -8,8 +8,6 @@ public class OrderCanceledEventShared {
     private Long id;
     private Long customerId;
 
-    private LocalDateTime recentUpdateTime;
-    private LocalDateTime eventCreateTime;
 
     private double totalPrice;
 
@@ -17,12 +15,9 @@ public class OrderCanceledEventShared {
     public OrderCanceledEventShared(){}
 
     // Will be used in the shared-event
-    public OrderCanceledEventShared(Long id, Long customerId, LocalDateTime recentUpdateTime,
-                                    LocalDateTime eventCreateTime, double totalPrice) {
+    public OrderCanceledEventShared(Long id, Long customerId, double totalPrice) {
         this.id = id;
         this.customerId = customerId;
-        this.recentUpdateTime = recentUpdateTime;
-        this.eventCreateTime = eventCreateTime;
         this.totalPrice = totalPrice;
     }
 
@@ -41,22 +36,6 @@ public class OrderCanceledEventShared {
 
     public void setCustomerId(Long customerId) {
         this.customerId = customerId;
-    }
-
-    public LocalDateTime getRecentUpdateTime() {
-        return recentUpdateTime;
-    }
-
-    public void setRecentUpdateTime(LocalDateTime recentUpdateTime) {
-        this.recentUpdateTime = recentUpdateTime;
-    }
-
-    public LocalDateTime getEventCreateTime() {
-        return eventCreateTime;
-    }
-
-    public void setEventCreateTime(LocalDateTime eventCreateTime) {
-        this.eventCreateTime = eventCreateTime;
     }
 
     public double getTotalPrice() {

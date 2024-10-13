@@ -80,7 +80,7 @@ class Customer:
                 send_curl('PATCH', url)
 
             # Interval of 0.5 seconds
-            await asyncio.sleep(0.5)
+            await asyncio.sleep(0.2)
 
         # Send placeOrder request
         print(f"(Customer {self.number}):")

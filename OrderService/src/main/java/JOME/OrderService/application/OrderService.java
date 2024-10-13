@@ -130,26 +130,26 @@ public class OrderService {
         boolean paymentResult = restPaymentClient.processPayment(currentCustomer);
 
 
+        // Change the state of the Order - call orderDomain Service here
+        // ( the state will be different based on the payment result )
+        Order savedResult = orderDomainService.placeOrder(newOrder , paymentResult);
+
+        // save the Order State
+        Order savedState = orderRepository.save(savedResult);
+
+        // because of id of Order -> After when we have a Order ID.
         if(paymentResult){
             // end of ShoppingCartLifeCycle
             currentShoppingCart.getOrderLineItemList().clear();
             shoppingCartRepository.delete(currentShoppingCart);
 
             // Raise New Event : OrderPlaced Event
-            OrderPlacedEvent orderPlacedEvent = new OrderPlacedEvent(newOrder);
+            OrderPlacedEvent orderPlacedEvent = new OrderPlacedEvent(savedState);
             kafkaProducerService.sendOrderPlacedEvent(orderPlacedEvent);
-
         }
 
 
-        // Change the state of the Order - call orderDomain Service here
-        // ( the state will be different based on the payment result )
-        Order savedResult = orderDomainService.placeOrder(newOrder , paymentResult);
-
-
-        // save the Order State
-        Order SavedState = orderRepository.save(savedResult);
-        return new OrderDTO(SavedState);
+        return new OrderDTO(savedState);
 
     }
 

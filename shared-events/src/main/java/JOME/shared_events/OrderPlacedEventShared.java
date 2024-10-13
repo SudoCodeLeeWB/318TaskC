@@ -10,8 +10,7 @@ public class OrderPlacedEventShared {
     private Long customerId;
     private String customerName;
     private double totalPrice;
-    private LocalDateTime recentUpdateTime;
-    private LocalDateTime eventCreateTime;
+
 
     // Delivery Address Part
     private String street;
@@ -28,14 +27,12 @@ public class OrderPlacedEventShared {
     // Will be used for shared-event
     // Base constructor
     public OrderPlacedEventShared(Long id, Long customerId, String customerName, double totalPrice,
-                                  LocalDateTime recentUpdateTime, LocalDateTime eventCreateTime,
                                   String street, String state, String country, String postCode) {
         this.id = id;
         this.customerId = customerId;
         this.customerName = customerName;
         this.totalPrice = totalPrice;
-        this.recentUpdateTime = recentUpdateTime;
-        this.eventCreateTime = eventCreateTime;
+
         this.street = street;
         this.state = state;
         this.country = country;
@@ -77,21 +74,6 @@ public class OrderPlacedEventShared {
         this.totalPrice = totalPrice;
     }
 
-    public LocalDateTime getRecentUpdateTime() {
-        return recentUpdateTime;
-    }
-
-    public void setRecentUpdateTime(LocalDateTime recentUpdateTime) {
-        this.recentUpdateTime = recentUpdateTime;
-    }
-
-    public LocalDateTime getEventCreateTime() {
-        return eventCreateTime;
-    }
-
-    public void setEventCreateTime(LocalDateTime eventCreateTime) {
-        this.eventCreateTime = eventCreateTime;
-    }
 
     public String getStreet() {
         return street;

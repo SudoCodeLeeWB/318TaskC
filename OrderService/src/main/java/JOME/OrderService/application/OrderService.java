@@ -1,6 +1,9 @@
 package JOME.OrderService.application;
 
 
+import JOME.OrderService.antiCorruption.DeleteProductEventMapper;
+import JOME.OrderService.antiCorruption.ProductCreateEventMapper;
+import JOME.OrderService.antiCorruption.UpdateProductStockEventMapper;
 import JOME.OrderService.domain.entity.Customer;
 import JOME.OrderService.domain.entity.Order;
 import JOME.OrderService.domain.entity.Product;
@@ -11,12 +14,16 @@ import JOME.OrderService.domain.service.OrderDomainService;
 import JOME.OrderService.domain.service.ShoppingCartDomainService;
 import JOME.OrderService.dto.OrderDTO;
 import JOME.OrderService.dto.ShoppingCartDTO;
+
 import JOME.OrderService.infrastructure.external.messaging.KafkaProducerService;
 import JOME.OrderService.infrastructure.external.rest.RestPaymentClient;
 import JOME.OrderService.infrastructure.persistance.CustomerRepostory;
 import JOME.OrderService.infrastructure.persistance.OrderRepository;
 import JOME.OrderService.infrastructure.persistance.ProductRepository;
 import JOME.OrderService.infrastructure.persistance.ShoppingCartRepository;
+import JOME.shared_events.AddNewProductEventShared;
+import JOME.shared_events.ProductDeleteEventShared;
+import JOME.shared_events.UpdateProductStockEventShared;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -71,11 +78,11 @@ public class OrderService {
 
         // get product data from productRepository, using productId
         Optional<Product> newProductOpt = productRepository.findById(productId);
-        Product newProduct = newProductOpt.orElseThrow(()-> new RuntimeException()); // TODO
+        Product newProduct = newProductOpt.orElseThrow(()-> new RuntimeException()); //  
 
         // add product to the shopping cart ( delegate )
         ShoppingCart savedResult = shoppingCartDomainService.addNewProductToShoppingCart(currentShoppingCart, newProduct, quantity );
-        savedResult = shoppingCartRepository.save(savedResult); // TODO
+        savedResult = shoppingCartRepository.save(savedResult); //  
 
         return new ShoppingCartDTO(savedResult);
     }
@@ -86,11 +93,11 @@ public class OrderService {
 
         //setup shopping cart
         Optional<ShoppingCart> recentShoppingCart = shoppingCartRepository.findByCustomerId(customerId);
-        ShoppingCart currentShoppingCart = recentShoppingCart.orElseThrow(() -> new RuntimeException()); // TODO
+        ShoppingCart currentShoppingCart = recentShoppingCart.orElseThrow(() -> new RuntimeException()); //  
 
         // delete product quantity from shopping cart ( delegate )
         ShoppingCart savedResult = shoppingCartDomainService.removeProductQuantityFromShoppingCart(currentShoppingCart,productId, quantity );
-        savedResult = shoppingCartRepository.save(savedResult); // TODO
+        savedResult = shoppingCartRepository.save(savedResult); //  
         return new ShoppingCartDTO(savedResult);
 
     }
@@ -101,11 +108,11 @@ public class OrderService {
 
         //setup shopping cart
         Optional<ShoppingCart> recentShoppingCart = shoppingCartRepository.findByCustomerId(customerId);
-        ShoppingCart currentShoppingCart = recentShoppingCart.orElseThrow(() -> new RuntimeException()); // TODO
+        ShoppingCart currentShoppingCart = recentShoppingCart.orElseThrow(() -> new RuntimeException()); //  
 
         // Add product quantity from shopping cart ( delegate )
         ShoppingCart savedResult = shoppingCartDomainService.addProductQuantityFromShoppingCart(currentShoppingCart,productId, quantity );
-        savedResult = shoppingCartRepository.save(savedResult); // TODO
+        savedResult = shoppingCartRepository.save(savedResult); //  
         return new ShoppingCartDTO(savedResult);
 
     }
@@ -117,11 +124,11 @@ public class OrderService {
 
         // find Shopping Cart
         Optional<ShoppingCart> recentShoppingCart = shoppingCartRepository.findByCustomerId(customerId);
-        ShoppingCart currentShoppingCart = recentShoppingCart.orElseThrow(() -> new RuntimeException()); // TODO
+        ShoppingCart currentShoppingCart = recentShoppingCart.orElseThrow(() -> new RuntimeException()); //  
 
         // find customer information
         Optional<Customer> customer = customerRepostory.findById(customerId);
-        Customer currentCustomer = customer.orElseThrow(() -> new RuntimeException()); // TODO
+        Customer currentCustomer = customer.orElseThrow(() -> new RuntimeException()); //  
 
         // convert shopping cart into Order
         Order newOrder = orderFactory.createOrder(currentShoppingCart , currentCustomer);
@@ -179,15 +186,52 @@ public class OrderService {
     // Kafka subscribe
 
     // for CustomerRRepository - CRUD
-//  use  @KafkaListener()
     public void handleCustomerCreated(){}
     public void handleCustomerDeleted(){}
     public void handleCustomerUpdated(){}
 
+
     // for ProductRepository - CRUD
-    public void handleProductCreated(){}
-    public void handleProductDeleted(){}
-    public void handleProductUpdated(){}
+    public void handleProductCreated(AddNewProductEventShared event){
+
+        // apply ACL
+        Product newProduct = ProductCreateEventMapper.mapFromEventToDomain(event);
+
+        // Save it
+        Product savedState = productRepository.save(newProduct);
+
+        // DEBUG :
+        System.out.println(savedState);
+
+    }
+    public void handleProductDeleted(ProductDeleteEventShared event){
+
+        // apply ACL
+        Long targetId = DeleteProductEventMapper.mapFromEventToDomain(event);
+
+        productRepository.deleteById(targetId);
+
+    }
+
+
+
+    public void handleProductUpdated(UpdateProductStockEventShared event){
+
+
+        Long targetProductId = event.getId();
+        Optional<Product> targetProduct = productRepository.findById(targetProductId);
+        Product currentProduct = targetProduct.orElseThrow(() -> new RuntimeException());
+
+        // apply ACL
+        Product modifiedProduct = UpdateProductStockEventMapper.mapFromEventToDomain(currentProduct , event);
+
+        // update product state
+        Product savedState = productRepository.save(modifiedProduct);
+
+        // DEBUG :
+        System.out.println(event);
+
+    }
 
 
 }

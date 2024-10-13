@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>JOME</groupId>
-	<artifactId>ShippingMicroservice </artifactId>
+	<artifactId>ShippingService</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>ShippingMicroservice </name>
+	<name>ShippingService</name>
 	<description>Shipping Microservice</description>
 	<url/>
 	<licenses>

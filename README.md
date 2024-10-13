@@ -1,7 +1,7 @@
-# 318TaskC
 Task C for CSCI318 
 
 * WonbeenLee (8243657)
+* Mayowa Adeniyi (7684861)
 
 
 ___
@@ -303,22 +303,29 @@ curl --location --request DELETE 'http://localhost:8080/product/delete/1' \
 ```
 
 
-
-### Use case 10 : ** **
+### Usecase 10 : **Update Order Shipment Status**
 
 Windows Powershell
 ```shell
 
 ```
-Windows Cmd
+Windows cmd (NOT THIS, TODO)
+```cmd
+curl -X PATCH -H "Content-Type:application/json" http://localhost:8085/shipment/updateStatus/100/SHIPPED
+```
+
+MacOS / Linux
 ```shell
 
 ```
-MacOs / Linux
-```shell
 
-
-```
+(temp)
+create shipment
+curl -X PATCH -H "Content-Type:application/json" http://localhost:8085/shipment/new/100
+get shipment by orderID
+curl -X GET http://localhost:8085/shipment/getByOrder/100
+delete shipment if not shipped
+curl -X DELETE -H "Content-Type:application/json" http://localhost:8085/shipment/delete/100
 
 
 

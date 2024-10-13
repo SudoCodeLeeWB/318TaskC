@@ -1,10 +1,10 @@
-package JOME.ShippingMicroservice;
+package JOME.ShippingService;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class ShippingMicroserviceApplicationTests {
+class ShippingServiceApplicationTests {
 
 	@Test
 	void contextLoads() {

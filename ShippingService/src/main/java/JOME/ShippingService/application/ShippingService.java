@@ -1,76 +1,90 @@
 package JOME.ShippingService.application;
 
+import JOME.ShippingService.antiCorruption.OrderCanceledEventMapper;
+import JOME.ShippingService.antiCorruption.OrderPlacedEventMapper;
 import JOME.ShippingService.domain.entity.Shipment;
-import JOME.ShippingService.domain.valueObject.ShippingStatus;
-import JOME.ShippingService.infrastructure.external.KafkaConsumerServiceOrder;
+import JOME.ShippingService.domain.service.ShipmentDomainService;
 import JOME.ShippingService.infrastructure.persistance.ShipmentRepository;
 import JOME.ShippingService.dto.ShipmentDTO;
 
+import JOME.shared_events.OrderCanceledEventShared;
+import JOME.shared_events.OrderPlacedEventShared;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ShippingService {
 
-    private final Shipment shipment;
     private final ShipmentRepository shipmentRepository;
+    private final ShipmentDomainService shipmentDomainService;
 
 
     @Autowired
-    public ShippingService(Shipment _shipment, ShipmentRepository _shipmentRepository, KafkaConsumerServiceOrder kafkaConsumerServiceOrder) {
-        this.shipment = _shipment;
+    public ShippingService(ShipmentRepository _shipmentRepository , ShipmentDomainService shipmentDomainService) {
         this.shipmentRepository = _shipmentRepository;
-    }
-
-    // API Expose
-
-    // GET
-    // Read a shipment by order ID
-    public Shipment getShipmentByOrderID(Long _orderID) {
-        return shipmentRepository.findByOrderID(_orderID);
+        this.shipmentDomainService = shipmentDomainService;
     }
 
 
+    public ShipmentDTO getShipmentByOrderID(Long orderID){
 
-    // STATE UPDATE => mark as...
-
-    
-    public ShipmentDTO updateShipmentStatus(Long _orderID, String _status) {
-        Shipment shipment = shipmentRepository.findByOrderID(_orderID);
-        if (shipment == null) {
-            return null;
-        }
-        if (_status.equals("SHIPPED") && shipment.getShippingStatus().equals(ShippingStatus.NOT_SHIPPED)) {
-            shipment.setToShipped();
-        } else if (_status.equals("DELIVERED") && shipment.getShippingStatus().equals(ShippingStatus.SHIPPED)) {
-            shipment.setToDelivered();
-
-            // TODO: Notify the order service that the order has been delivered
-        } else {
-            return null;
-        }
-        shipmentRepository.save(shipment);
+        Shipment shipment = shipmentRepository.findByOrderID(orderID).orElseThrow(RuntimeException::new);
         return new ShipmentDTO(shipment);
+
+    }
+
+    public ShipmentDTO markAsShipped(Long orderID){
+
+        // find the shipment in the repository
+        Shipment shipment = shipmentRepository.findByOrderID(orderID).orElseThrow(RuntimeException::new);
+
+        // modify the state of the shipment
+        Shipment modifiedShipment = shipmentDomainService.markAsShipped(shipment);
+
+        // save the changed state
+        modifiedShipment = shipmentRepository.save(modifiedShipment);
+
+        return new ShipmentDTO(modifiedShipment);
+
     }
 
 
-    // Delete a shipment if it is not yet shipped
-    public void deleteShipment(Long _orderID) {
-        Shipment shipment = shipmentRepository.findByOrderID(_orderID);
-        if (shipment.getShippingStatus().equals(ShippingStatus.NOT_SHIPPED)) {
-            shipmentRepository.delete(shipment);
-        } else {
-            throw new RuntimeException();
-        }
+    public ShipmentDTO markAsDelivered(Long orderID){
+
+        // find the shipment in the repository
+        Shipment shipment = shipmentRepository.findByOrderID(orderID).orElseThrow(RuntimeException::new);
+
+        // modify the state of the shipment
+        Shipment modifiedShipment = shipmentDomainService.markAsDelivered(shipment);
+
+        // save the changed state
+        modifiedShipment = shipmentRepository.save(modifiedShipment);
+
+        return new ShipmentDTO(modifiedShipment);
+
     }
-
-
 
 
     // handled by event
+    public void handleOrderPlacedEvent(OrderPlacedEventShared event ){
 
+        // Apply ACL
+        Shipment newShipment = OrderPlacedEventMapper.mapFromEventToDomain(event);
 
+        // save the new Shipment
+        shipmentRepository.save(newShipment);
 
+    }
+
+    public void handleOrderCanceledEvent(OrderCanceledEventShared event ){
+
+        // Apply ACL
+        Long targetId = OrderCanceledEventMapper.mapFromEventToDomain(event);
+
+        // delete the order
+        shipmentRepository.deleteById(targetId);
+
+    }
 
 
 }

@@ -32,7 +32,6 @@ public class KafkaStreamProcessor {
         // inputStream = KStream , configured by KafkaStreamConfig
         return inputStream -> {
 
-
             // Deserialize the incoming events
             KStream<String, Object> deserializedStream = inputStream.mapValues(value -> {
                 if (value instanceof byte[]) {
@@ -48,6 +47,7 @@ public class KafkaStreamProcessor {
                 }
                 return value;
             });
+
 
             // Logging the type of processed event
             deserializedStream.foreach((key, value) -> {

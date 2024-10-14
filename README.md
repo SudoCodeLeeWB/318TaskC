@@ -79,7 +79,7 @@ You can now terminate producer / consumer terminal instance
 
 
 ___
-## 2. Run multiple Projects ( follow command )
+## 2. Run multiple Projects ( follow command ) 
 In this project, there are 5 different microservices included. ( This will be explained more in the below Project Structure section. )  
 We will use maven to do the build / run process  
 
@@ -154,6 +154,9 @@ ___
 
 ## Sample CURL Api Calls :
 
+
+### Order Microservice Related
+
 ### Use case 1 : **Add new Product to Order**
   
 Windows Powershell
@@ -169,7 +172,7 @@ MacOs / Linux
 curl --location --request PATCH 'http://localhost:8080/order/addNew/1/1/1'
 ```
 
-### Use case 2 : **Increase quantity of an existing product**
+### Use case 2 : **Increase quantity of an existing product in Order**
 
 Windows Powershell
 ```shell
@@ -185,7 +188,7 @@ curl --location --request PATCH 'http://localhost:8080/order/add/1/1/1'
 ```
 
 
-### Use case 3 : **Deduct quantity of an existing product **
+### Use case 3 : **Deduct quantity of an existing product in Order**
 
 Windows Powershell
 ```shell
@@ -229,6 +232,8 @@ MacOs / Linux
 ```shell
 curl --location --request PATCH 'http://localhost:8080/order/cancelOrder/1'
 ```
+
+### Product Microservice Related
 
 ### Use case 7 : **Add new Product into Product Service**
 
@@ -302,16 +307,66 @@ curl --location --request DELETE 'http://localhost:8080/product/delete/1' \
 --header 'Content-Type: application/json'
 ```
 
+### Shipping Microservice Related
 
-### Usecase 10 : **Update Order Shipment Status**
+### Usecase 10 : **Get Shipping Status Of a order**
 
 Windows Powershell
 ```shell
 
 ```
-Windows cmd (NOT THIS, TODO)
+Windows cmd 
 ```cmd
-curl -X PATCH -H "Content-Type:application/json" http://localhost:8085/shipment/updateStatus/100/SHIPPED
+```
+
+MacOS / Linux
+```shell
+curl --location 'http://localhost:8080/shipping/getShippingStatus/1'
+```
+
+
+### Usecase 11 : **Mark Shipment as Shipped**
+
+Windows Powershell
+```shell
+
+```
+Windows cmd
+```cmd
+```
+
+MacOS / Linux
+```shell
+curl --location --request PATCH 'http://localhost:8080/shipping/markAsShipped/1'
+```
+
+### Usecase 12 : **Mark Shipment as Delivered**
+
+Windows Powershell
+```shell
+
+```
+Windows cmd
+```cmd
+
+```
+
+MacOS / Linux
+```shell
+curl --location --request PATCH 'http://localhost:8080/shipping/markAsDelivered/1'
+```
+
+### Stream Processing Related
+
+### Usecase 13 : **Query total Order Numbers Before N minutes**
+
+Windows Powershell
+```shell
+
+```
+Windows cmd
+```cmd
+
 ```
 
 MacOS / Linux
@@ -319,13 +374,30 @@ MacOS / Linux
 
 ```
 
-(temp)
-create shipment
-curl -X PATCH -H "Content-Type:application/json" http://localhost:8085/shipment/new/100
-get shipment by orderID
-curl -X GET http://localhost:8085/shipment/getByOrder/100
-delete shipment if not shipped
-curl -X DELETE -H "Content-Type:application/json" http://localhost:8085/shipment/delete/100
+TODO
+### Usecase 14 : **Query total Order Numbers Before N minutes**
+
+Windows Powershell
+```shell
+
+```
+Windows cmd
+```cmd
+
+```
+
+MacOS / Linux
+```shell
+
+```
+
+
+
+
+
+### User Microservice Related
+
+
 
 
 

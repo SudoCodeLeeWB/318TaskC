@@ -3,6 +3,8 @@ Task C for CSCI318
 * WonbeenLee (8243657)
 * Mayowa Adeniyi (7684861)
 
+-- I guess we need to make a windows version of readme, since we do not have extra space here & 
+-- We also need to explain how to install kafka & execute it from windows
 
 ___
 
@@ -123,7 +125,7 @@ mvn spring-boot:run
 
 * ShippingMicroService
 ```shell
-cd ShippingMicroService
+cd ShippingService
 mvn clean install
 mvn spring-boot:run
 ```
@@ -316,7 +318,7 @@ Windows Powershell
 
 ```
 Windows cmd 
-```cmd
+```shell
 ```
 
 MacOS / Linux
@@ -332,7 +334,8 @@ Windows Powershell
 
 ```
 Windows cmd
-```cmd
+```shell
+
 ```
 
 MacOS / Linux
@@ -347,7 +350,7 @@ Windows Powershell
 
 ```
 Windows cmd
-```cmd
+```shell
 
 ```
 
@@ -365,32 +368,30 @@ Windows Powershell
 
 ```
 Windows cmd
-```cmd
+```shell
 
 ```
 
 MacOS / Linux
 ```shell
-
+curl --location 'http://localhost:8080/analysis/getOrderNumbersFromBefore/5'
 ```
 
-TODO
-### Usecase 14 : **Query total Order Numbers Before N minutes**
+### Usecase 14 : **Query total Sales Per Country Before N minutes**
 
 Windows Powershell
 ```shell
 
 ```
 Windows cmd
-```cmd
+```shell
 
 ```
 
 MacOS / Linux
 ```shell
-
+curl --location 'http://localhost:8080/analysis/getCountrySales/Australia/3'
 ```
-
 
 
 

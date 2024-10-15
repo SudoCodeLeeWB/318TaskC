@@ -7,17 +7,17 @@ public class OrderCanceledEventShared {
 
     private Long id;
     private Long customerId;
-
-
+    private String country;
     private double totalPrice;
-
 
     public OrderCanceledEventShared(){}
 
+
     // Will be used in the shared-event
-    public OrderCanceledEventShared(Long id, Long customerId, double totalPrice) {
+    public OrderCanceledEventShared(Long id, Long customerId, String country, double totalPrice) {
         this.id = id;
         this.customerId = customerId;
+        this.country = country;
         this.totalPrice = totalPrice;
     }
 
@@ -44,5 +44,13 @@ public class OrderCanceledEventShared {
 
     public void setTotalPrice(double totalPrice) {
         this.totalPrice = totalPrice;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
     }
 }

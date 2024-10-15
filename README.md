@@ -409,19 +409,20 @@ curl --location 'http://localhost:8080/analysis/getCountrySales/Australia/3'
 
 
 
+___ 
 
 
+## Simulation of Real World & Stream Processing 
+
+* This project includes a file for simulation in the Simulation Directory. 
+* The Main.py is used to simulate the real world, where the users from all over the world continuously sending requests
+* In this main.py script, it adds a new 19 products to the system, adds new 00 customers , and generated customers send api request asynchronously for every 0.5 seconds.
+* After running this script, try Stream processing Related Calls. 
+
+![RealWorldSimulation](./ReadmeImageFiles/RealWorldSimulation.png)
 
 
-
-
-
-
-
-
-
-
-
+___
 
 
 

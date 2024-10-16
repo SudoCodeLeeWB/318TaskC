@@ -1,9 +1,6 @@
-package JOME.UserService.domain.event;
+package JOME.shared_events;
 
-import JOME.UserService.domain.entity.User;
-import JOME.UserService.domain.valueObject.UserType;
-
-public class UserAddressModifyEvent {
+public class UserAddressModifyEventShared {
 
 
     private Long userID;
@@ -13,21 +10,15 @@ public class UserAddressModifyEvent {
     private String postCode;
 
 
+    public UserAddressModifyEventShared() {}
+
     // will be used for shared event
-    public UserAddressModifyEvent(Long userID, String street, String state, String country, String postCode) {
+    public UserAddressModifyEventShared(Long userID, String street, String state, String country, String postCode) {
         this.userID = userID;
         this.street = street;
         this.state = state;
         this.country = country;
         this.postCode = postCode;
-    }
-
-    public UserAddressModifyEvent(User user) {
-        this.userID = user.getUserID();
-        this.street = user.getAddress().getStreet();
-        this.state = user.getAddress().getState();
-        this.country = user.getAddress().getCountry();
-        this.postCode = user.getAddress().getPostCode();
     }
 
 

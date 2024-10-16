@@ -1,11 +1,7 @@
-package JOME.UserService.domain.event;
-
-import JOME.UserService.domain.entity.User;
-import JOME.UserService.domain.valueObject.DeliveryAddress;
-import JOME.UserService.domain.valueObject.UserType;
+package JOME.shared_events;
 
 
-public class UserAddEvent {
+public class UserAddEventShared {
 
     private Long userID;
     private String name;
@@ -13,36 +9,23 @@ public class UserAddEvent {
     private String phoneNumber;
 
     // value objects
-    public UserType userType;
-
     private String street;
     private String state;
     private String country;
     private String postCode;
 
 
-    public UserAddEvent(Long userID, String name, String email, String phoneNumber, UserType userType , String street, String state, String country, String postCode) {
+    public UserAddEventShared() {}
+
+    public UserAddEventShared(Long userID, String name, String email, String phoneNumber, String street, String state, String country, String postCode) {
         this.userID = userID;
         this.name = name;
         this.email = email;
         this.phoneNumber = phoneNumber;
-        this.userType = userType;
         this.street = street;
         this.state = state;
         this.country = country;
         this.postCode = postCode;
-    }
-
-    public UserAddEvent(User user){
-        this.userID=user.getUserID();
-        this.name=user.getName();
-        this.email=user.getEmail();
-        this.phoneNumber=user.getPhoneNumber();
-        this.userType=user.getUserType();
-        this.street= user.getAddress().getStreet();
-        this.state= user.getAddress().getState();
-        this.country= user.getAddress().getCountry();
-        this.postCode= user.getAddress().getPostCode();
     }
 
 

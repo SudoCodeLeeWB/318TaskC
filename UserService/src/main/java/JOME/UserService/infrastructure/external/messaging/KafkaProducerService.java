@@ -1,5 +1,7 @@
 package JOME.UserService.infrastructure.external.messaging;
 
+import JOME.UserService.domain.event.UserAddEvent;
+import JOME.UserService.domain.event.UserAddressModifyEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
@@ -22,50 +24,41 @@ public class KafkaProducerService {
     }
 
 
-//
-//    // Event sender for Product Add
-//    public void sendProductAddEvent(AddNewProductEvent event){
-//
-//        // change the event into shared event
-//
-//        AddNewProductEventShared sharedEvent = new AddNewProductEventShared(
-//                event.getId(),
-//                event.getName(),
-//                event.getDescription(),
-//                event.getPrice(),
-//                event.getStock(),
-//                event.getRecentUpdateTime()
-//        );
-//
-//        kafkaTemplate.send( TOPIC ,sharedEvent);
-//
-//
-//        System.out.println(sharedEvent);
-//    }
-//
-//
-//    // Event sender for Product Update
-//    public void sendProductUpdateEvent(UpdateProductStockEvent event ){
-//
-//        UpdateProductStockEventShared sharedEvent = new UpdateProductStockEventShared(
-//                event.getId(),
-//                event.getStock(),
-//                event.getRecentUpdateTime()
-//        );
-//
-//        kafkaTemplate.send( TOPIC ,sharedEvent);
-//    }
-//
-//
-//    // Event Sender for Product Delete
-//    public void sendProductDeleteEvent(ProductDeleteEvent event ){
-//
-//        ProductDeleteEventShared sharedEvent = new ProductDeleteEventShared(
-//                event.getId()
-//        );
-//
-//        kafkaTemplate.send( TOPIC ,sharedEvent);
-//    }
+
+
+
+    public void sendUserAddEvent(UserAddEvent event){
+
+        // convert the event
+        UserAddEventShared sharedEvent = new UserAddEventShared(
+                event.getUserID(),
+                event.getName(),
+                event.getEmail(),
+                event.getPhoneNumber(),
+                event.getStreet(),
+                event.getState(),
+                event.getCountry(),
+                event.getPostCode()
+        );
+
+        kafkaTemplate.send(TOPIC, sharedEvent);
+
+    }
+
+
+    public void sendUserAddressModifiedEvent(UserAddressModifyEvent event){
+
+        UserAddressModifyEventShared sharedEvent = new UserAddressModifyEventShared(
+                event.getUserID(),
+                event.getStreet(),
+                event.getState(),
+                event.getCountry(),
+                event.getPostCode()
+        );
+
+        kafkaTemplate.send(TOPIC, sharedEvent);
+
+    }
 
 
 

@@ -3,6 +3,8 @@ package JOME.AnalyticsMicroservice.service;
 import org.apache.kafka.streams.KeyValue;
 import org.apache.kafka.streams.StoreQueryParameters;
 import org.apache.kafka.streams.errors.InvalidStateStoreException;
+import org.apache.kafka.streams.kstream.Windowed;
+import org.apache.kafka.streams.state.KeyValueIterator;
 import org.apache.kafka.streams.state.QueryableStoreTypes;
 import org.apache.kafka.streams.state.ReadOnlyWindowStore;
 import org.apache.kafka.streams.state.WindowStoreIterator;
@@ -31,22 +33,55 @@ public class  AnalyticsService {
     public final static String TOTAL_SALES_STORE = "total_sales";
 
 
+    // Use case 1
+
+    /**
+     * REFERENCE :  https://kafka.apache.org/10/documentation/streams/developer-guide/interactive-queries.html#querying-local-window-stores
+     * @return number of orders made during time window
+     * */
     public long getTotalOrdersForTimeWindow(Instant fromTime, Instant toTime) {
-        // Access the windowed store for orders count
-        ReadOnlyWindowStore<String, Long> store = interactiveQueryService.getQueryableStore(
+
+        // Accessing Storage ( TOTAL_ORDERS_STORE )
+        ReadOnlyWindowStore<String, Long> storage = interactiveQueryService.getQueryableStore(
                 TOTAL_ORDERS_STORE, QueryableStoreTypes.windowStore());
 
-        // Fetch all records within the time window
-        WindowStoreIterator<Long> orders = store.fetch("totalOrders", fromTime, toTime);
-
         long totalOrders = 0;
-        while (orders.hasNext()) {
-            KeyValue<Long, Long> windowedOrder = orders.next();
-            totalOrders += windowedOrder.value; // Sum up the total orders
+
+        // Iterate customer id in the store ( TOTAL_ORDERS_STORE )  &  sum up the order counts
+        try (KeyValueIterator<Windowed<String>, Long> iterator = storage.fetchAll(fromTime, toTime)) {
+            while (iterator.hasNext()) {
+                KeyValue<Windowed<String>, Long> entry = iterator.next();
+                totalOrders += entry.value;
+            }
+        } catch (Exception e) {
+            e.printStackTrace(); // for error stack check
         }
 
         return totalOrders;
     }
+
+
+    public double getTotalSalesForTimeWindow( String country, Instant fromTime, Instant toTime) {
+
+        ReadOnlyWindowStore<String, Double> storage = interactiveQueryService.getQueryableStore(
+                TOTAL_SALES_STORE, QueryableStoreTypes.windowStore());
+
+        double totalSales = 0;
+
+        try (WindowStoreIterator<Double> iterator = storage.fetch(country, fromTime,toTime)){
+            while (iterator.hasNext()) {
+                KeyValue<Long,Double> timeFrameSale = iterator.next();
+                totalSales += timeFrameSale.value;
+            }
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
+        return totalSales;
+
+    }
+
 
 
 

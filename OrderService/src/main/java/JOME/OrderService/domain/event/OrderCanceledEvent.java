@@ -15,6 +15,7 @@ public class OrderCanceledEvent {
     private LocalDateTime eventCreateTime;
 
     private double totalPrice;
+    private String country;
 
     public OrderCanceledEvent(){}
 
@@ -25,16 +26,18 @@ public class OrderCanceledEvent {
         this.recentUpdateTime = order.getRecentUpdateTime();
         this.eventCreateTime = LocalDateTime.now();
         this.totalPrice = order.getTotalPrice();
+        this.country= order.getDeliveryAddress().getCountry();
     }
 
     // Will be used in the shared-event
     public OrderCanceledEvent(Long id, Long customerId, LocalDateTime recentUpdateTime,
-                              LocalDateTime eventCreateTime, double totalPrice) {
+                              LocalDateTime eventCreateTime, double totalPrice, String country) {
         this.id = id;
         this.customerId = customerId;
         this.recentUpdateTime = recentUpdateTime;
         this.eventCreateTime = eventCreateTime;
         this.totalPrice = totalPrice;
+        this.country = country;
     }
 
 
@@ -76,5 +79,13 @@ public class OrderCanceledEvent {
 
     public void setTotalPrice(double totalPrice) {
         this.totalPrice = totalPrice;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
     }
 }

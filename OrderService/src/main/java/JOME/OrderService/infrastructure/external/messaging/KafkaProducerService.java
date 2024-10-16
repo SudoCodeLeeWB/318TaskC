@@ -48,6 +48,7 @@ public class KafkaProducerService {
         OrderCanceledEventShared sharedEvent = new OrderCanceledEventShared(
                 event.getId(),
                 event.getCustomerId(),
+                event.getCountry(),
                 event.getTotalPrice()
         );
 

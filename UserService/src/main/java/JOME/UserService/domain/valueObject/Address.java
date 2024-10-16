@@ -1,10 +1,8 @@
 package JOME.UserService.domain.valueObject;
 
 import jakarta.persistence.*;
-import org.springframework.stereotype.Component;
 
-@Entity
-@Component
+@Embeddable
 public class Address {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

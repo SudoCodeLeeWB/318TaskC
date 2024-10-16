@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import java.util.List;
 import org.springframework.stereotype.Component;
 import JOME.UserService.domain.valueObject.Address;
+import JOME.UserService.domain.enumeration.UserType;
 
 // make UserType, Cart, Order
 
@@ -18,13 +19,17 @@ public class User {
     private String email;
     private String phoneNumber;
     private String password;
+
+    // value objects
+    @Enumerated
     private UserType userType;
+
+    @Embedded
+    private Address address;
 
     private Cart cart;
     private List<Order> orders;
-    
-    @Enumerated
-    private Address address;
+
 
     // Shipment constructor to initialise a shippingStatus, order ID
     public User (){}

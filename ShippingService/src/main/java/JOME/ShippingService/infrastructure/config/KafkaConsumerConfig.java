@@ -38,8 +38,6 @@ public class KafkaConsumerConfig {
         // Using External Event as a Deserializer
         config.put(JsonDeserializer.TRUSTED_PACKAGES, "JOME.shared_events");
 
-
-
         return new DefaultKafkaConsumerFactory<>(config, new StringDeserializer(), new JsonDeserializer<>(Object.class));
     }
 

@@ -9,10 +9,8 @@ import org.springframework.stereotype.Service;
 import JOME.shared_events.*;
 
 
-
-
 @Service
-@KafkaListener(topics = "ProductChange" , groupId = "order-group")
+@KafkaListener(topics = "Order" , groupId = "shipping-group")
 public class KafkaConsumerServiceOrder {
 
 
@@ -25,34 +23,22 @@ public class KafkaConsumerServiceOrder {
     }
 
 
-//     Kafka listener to consume Messages
-//     Strategy : Different Event -> automatically deseralize ( try to match with correct event type )
-//     If this not works, consider using event type header
-
-
-    // Consumer for ProductChange topic
+    // Consumer for Order topic
     @KafkaHandler
     public void consumeOrderPlacedEvent(OrderPlacedEventShared event){
 
-        // DEBUG :
-        System.out.println("Received ProductChange event: " + event);
-//        shippingService.handleProductCreated(event);
-
+        System.out.println("Received OrderPlaced event: " + event);
+        shippingService.handleOrderPlacedEvent(event);
     }
 
 
     @KafkaHandler
     public void consumeOrderCanceledEvent(OrderCanceledEventShared event){
 
-        // DEBUG :
-        System.out.println("Received ProductChange event: " + event);
-        shippingService.handleProductUpdated(event);
-
+        System.out.println("Received OrderCanceled event: " + event);
+        shippingService.handleOrderCanceledEvent(event);
     }
 
-
-
-    // Consumer for CustomerChange topic
 
 
 

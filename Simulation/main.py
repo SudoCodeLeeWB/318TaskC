@@ -87,10 +87,10 @@ class Customer:
         place_order_url = f"http://localhost:8080/order/placeOrder/{self.number}"
         send_curl('PATCH', place_order_url)
 
-        # 10% chance to cancel the order
-        if random.random() < 0.1:
+        # 30% chance to cancel the order
+        if random.random() < 0.3:
             print(f"(Customer {self.number}):")
-            cancel_order_url = f"http://localhost:8081/order/cancelOrder/{self.number}"
+            cancel_order_url = f"http://localhost:8080/order/cancelOrder/{self.number}"
             send_curl('PATCH', cancel_order_url)
 
 

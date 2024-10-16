@@ -160,7 +160,7 @@ public class OrderService {
 
         // find order from Repository
         Optional<Order> order = orderRepository.findById(orderId);
-        Order currentOrder = order.orElseThrow( () -> new RuntimeException());
+        Order currentOrder = order.orElseThrow(RuntimeException::new);
 
 
         // Raise New Event : OrderCanceled Event

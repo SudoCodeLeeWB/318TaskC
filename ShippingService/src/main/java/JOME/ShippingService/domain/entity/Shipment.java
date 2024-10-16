@@ -1,5 +1,6 @@
 package JOME.ShippingService.domain.entity;
 
+import JOME.ShippingService.domain.valueObject.DeliveryAddress;
 import JOME.ShippingService.domain.valueObject.ShippingStatus;
 import jakarta.persistence.*;
 import org.springframework.stereotype.Component;
@@ -12,17 +13,34 @@ public class Shipment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long shipmentID;
     private Long orderID;
+
     @Enumerated
     private ShippingStatus shippingStatus;
 
+    @Embedded
+    private DeliveryAddress deliveryAddress;
+
+
     // Shipment constructor to initialise a shippingStatus, order ID
     public Shipment (){}
-    public Shipment(Long _orderID) {
+    public Shipment(Long _orderID , DeliveryAddress deliveryAddress) {
         this.orderID = _orderID;
         this.shippingStatus = ShippingStatus.NOT_SHIPPED;
+        this.deliveryAddress = deliveryAddress;
+
     }
 
-    // Function to get the ID of the shipment
+    public void setToShipped(){
+        this.shippingStatus = ShippingStatus.SHIPPED;
+    }
+
+    public void setToDelivered(){
+        this.shippingStatus = ShippingStatus.DELIVERED;
+    }
+
+
+
+    // getters / setters
     public Long getShipmentID() {
         return shipmentID;
     }
@@ -35,19 +53,17 @@ public class Shipment {
     // Function to get the status of the Shipment
     public ShippingStatus getShippingStatus() {return shippingStatus;}
 
-    // Functions to set the Shipment Status of the shipment
-    public void setToShipped() {
-        if (this.shippingStatus == ShippingStatus.NOT_SHIPPED) {
-            this.shippingStatus = ShippingStatus.SHIPPED;
-        } else {
-            throw new RuntimeException(); // TODO: HAVE MESSAGE
-        }
+
+    public DeliveryAddress getDeliveryAddress() {
+        return deliveryAddress;
     }
-    public void setToDelivered() {
-        if (this.shippingStatus == ShippingStatus.SHIPPED) {
-            this.shippingStatus = ShippingStatus.DELIVERED;
-        } else {
-            throw new RuntimeException(); // TODO: HAVE MESSAGE
-        }
+
+    public void setDeliveryAddress(DeliveryAddress deliveryAddress) {
+        this.deliveryAddress = deliveryAddress;
     }
+
+
+
+
+
 }

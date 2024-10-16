@@ -1,7 +1,9 @@
 Task C for CSCI318 
 
 * WonbeenLee (8243657)
-* Mayowa Adeniyi (7684861)
+* Mayowa Adeniyi (7684861)  
+{Add your name & stu number } 
+
 
 -- I guess we need to make a windows version of readme, since we do not have extra space here & 
 -- We also need to explain how to install kafka & execute it from windows
@@ -155,6 +157,10 @@ And we Also have other microservices that are not a part of a problem domain, su
 ___
 
 ## Sample CURL Api Calls :
+
+* To test the use case, it is critical to first add users and products. ( use case 1 , use case 15 )
+* Since Each Mircoservice does not have a predefined data inside
+* If users and products are not added, It will not properly work. 
 
 
 ### Order Microservice Related
@@ -399,10 +405,60 @@ curl --location 'http://localhost:8080/analysis/getCountrySales/Australia/3'
 ### User Microservice Related
 
 
+### Usecase 15 : ** Add new User **
+
+Windows Powershell
+```shell
+
+```
+Windows cmd
+```shell
+
+```
+
+MacOS / Linux
+```shell
+curl --location 'http://localhost:8080/user/add' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "name": "John Doe",
+    "email": "johndoe@example.com",
+    "phoneNumber": "1234567890",
+    "password": "password123",
+    "userType": "Customer",
+    "address": {
+        "street": "123 Main St",
+        "country": "USA",
+        "state": "NY",
+        "postCode": "10001"
+    }
+}'
+```
 
 
 
+### Usecase 16 : **Update User Address**
 
+Windows Powershell
+```shell
+
+```
+Windows cmd
+```shell
+
+```
+
+MacOS / Linux
+```shell
+curl --location --request PATCH 'http://localhost:8080/user/updateAddress/1' \
+--header 'Content-Type: application/json' \
+--data '{
+    "street": "Robsons Road",
+    "country": "Australia",
+    "state": "nsw",
+    "postCode": "2500"
+}'
+```
 
 
 
@@ -416,14 +472,12 @@ ___
 
 * This project includes a file for simulation in the Simulation Directory. 
 * The Main.py is used to simulate the real world, where the users from all over the world continuously sending requests
-* In this main.py script, it adds a new 19 products to the system, adds new 00 customers , and generated customers send api request asynchronously for every 0.5 seconds.
+* In this main.py script, it adds a new 19 products to the system, adds new 10 customers , and generated customers send api request asynchronously for every 0.5 seconds.
 * After running this script, try Stream processing Related Calls. 
 
 ![RealWorldSimulation](./ReadmeImageFiles/RealWorldSimulation.png)
 
 
-
-TODO : add the delivery class & updating the delivery status for every 1 seconds
 
 ___
 

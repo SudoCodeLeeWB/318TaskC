@@ -182,9 +182,30 @@ public class OrderService {
     // Kafka subscribe
 
     // for CustomerRRepository - CRUD
-    public void handleCustomerCreated(){}
-    public void handleCustomerDeleted(){}
-    public void handleCustomerUpdated(){}
+    public void handleCustomerCreated( UserAddEventShared event){
+
+        // apply ACL
+        Customer newCustomer = UserAddEventMapper.mapFromEventToDomain(event);
+
+        // Save it
+        Customer savedState = customerRepostory.save(newCustomer);
+
+    }
+
+
+    public void handleCustomerUpdated( UserAddressModifyEventShared event){
+
+
+        // modify the entity
+        Customer target = customerRepostory.findById(event.getUserID()).orElseThrow(RuntimeException::new);
+
+        // apply ACL
+        Customer modifiedCustomer = UserAddressModifyEventMapper.maprFromEventToDomain(target, event);
+
+        // Save it
+        customerRepostory.save(modifiedCustomer);
+
+    }
 
 
     // for ProductRepository - CRUD

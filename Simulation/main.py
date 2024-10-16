@@ -48,6 +48,30 @@ def add_products():
         send_curl('POST', base_url, product_data)
         time.sleep(0.3) # interval 0.3 secs
 
+
+# Function to add customers ( 10 )
+def add_customers():
+    base_url = "http://localhost:8080/user/add"
+    customers = [
+        '{"name": "John Doe", "email": "johndoe1@example.com", "phoneNumber": "1234567890", "password": "password123", "userType": "Customer", "address": {"street": "123 Main St", "country": "USA", "state": "NY", "postCode": "10001"}}',
+        '{"name": "Jane Doe", "email": "janedoe1@example.com", "phoneNumber": "9876543210", "password": "password123", "userType": "Customer", "address": {"street": "456 Elm St", "country": "Canada", "state": "ON", "postCode": "M5H 2N2"}}',
+        '{"name": "Alice Johnson", "email": "alicej1@example.com", "phoneNumber": "1122334455", "password": "password123", "userType": "Customer", "address": {"street": "789 Oak St", "country": "UK", "state": "London", "postCode": "SW1A 1AA"}}',
+        '{"name": "Bob Smith", "email": "bobsmith1@example.com", "phoneNumber": "5544332211", "password": "password123", "userType": "Customer", "address": {"street": "101 Pine St", "country": "Australia", "state": "NSW", "postCode": "2000"}}',
+        '{"name": "Charlie Brown", "email": "charlieb1@example.com", "phoneNumber": "6655443322", "password": "password123", "userType": "Customer", "address": {"street": "121 Maple St", "country": "Germany", "state": "Berlin", "postCode": "10115"}}',
+        '{"name": "David Williams", "email": "davidw1@example.com", "phoneNumber": "2233445566", "password": "password123", "userType": "Customer", "address": {"street": "131 Cedar St", "country": "France", "state": "Paris", "postCode": "75001"}}',
+        '{"name": "Eve Davis", "email": "eved1@example.com", "phoneNumber": "7788990011", "password": "password123", "userType": "Customer", "address": {"street": "141 Spruce St", "country": "Japan", "state": "Tokyo", "postCode": "100-0001"}}',
+        '{"name": "Frank Miller", "email": "frankm1@example.com", "phoneNumber": "3344556677", "password": "password123", "userType": "Customer", "address": {"street": "151 Birch St", "country": "Brazil", "state": "São Paulo", "postCode": "01000-000"}}',
+        '{"name": "Grace Lee", "email": "gracel1@example.com", "phoneNumber": "2233441122", "password": "password123", "userType": "Customer", "address": {"street": "161 Walnut St", "country": "India", "state": "Maharashtra", "postCode": "400001"}}',
+        '{"name": "Henry Clark", "email": "henryc1@example.com", "phoneNumber": "9988776655", "password": "password123", "userType": "Customer", "address": {"street": "171 Oakwood St", "country": "South Africa", "state": "Gauteng", "postCode": "2000"}}'
+    ]
+
+    # Send curl requests to add the customers
+    for customer_data in customers:
+        send_curl('POST', base_url, customer_data)
+        time.sleep(0.3)  # interval 0.3 secs
+
+
+
 # Customer class to handle sending requests
 class Customer:
     def __init__(self, number):
@@ -111,7 +135,10 @@ def main():
     # wait for a while
     time.sleep(3)
 
-    # Add customer adding function here later
+    # Add customer
+    print("Adding Customers...")
+    add_customers()
+    time.sleep(3)
 
 
     # run customers async

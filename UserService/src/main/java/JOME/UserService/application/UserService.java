@@ -2,6 +2,8 @@ package JOME.UserService.application;
 
 
 import JOME.UserService.domain.entity.User;
+import JOME.UserService.domain.event.UserAddEvent;
+import JOME.UserService.domain.event.UserAddressModifyEvent;
 import JOME.UserService.domain.factory.UserFactory;
 import JOME.UserService.domain.service.UserDomainService;
 import JOME.UserService.domain.valueObject.DeliveryAddress;
@@ -37,28 +39,6 @@ public class UserService {
         this.userDomainService = userDomainService;
     }
 
-//
-//    // Create
-//    public UserDTO addNewUser( UserDTO userDTO){
-//
-//
-//        User newUser = userFactory.createUser(userDTO);
-//
-//
-//        // save the new product into product repository
-//        User savedResult = userRepository.save(newUser);
-//
-//        // for persistence -> when it is saved, then it will have a id,
-//        // this id will be used for same in other databases ( persistence )
-//
-//        // Raise new event = AddNewProductEvent
-//        AddNewProductEvent event = new AddNewProductEvent(savedResult);
-//        kafkaProducerService.sendProductAddEvent(event);
-//
-//
-//        return new ProductDTO(savedResult);
-//
-//    }
 
     // Create
     public UserDTO addNewUser( UserDTO userDTO ){
@@ -74,9 +54,8 @@ public class UserService {
 
 
         // Raise new event = AddNewProductEvent
-//        AddNewProductEvent event = new AddNewProductEvent(savedResult);
-//        kafkaProducerService.sendProductAddEvent(event);
-
+        UserAddEvent event = new UserAddEvent(savedResult);
+        kafkaProducerService.sendUserAddEvent(event);
 
 
         return new UserDTO(savedResult);
@@ -95,7 +74,8 @@ public class UserService {
         savedUser = userRepository.save(savedUser);
 
         // Raise New Event :
-
+        UserAddressModifyEvent event = new UserAddressModifyEvent(savedUser);
+        kafkaProducerService.sendUserAddressModifiedEvent(event);
 
 
         return new UserDTO(savedUser);

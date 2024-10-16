@@ -81,4 +81,12 @@ public class User {
     public void setAddress(DeliveryAddress address) {
         this.address = address;
     }
+
+    public Long getUserID() {
+        return userID;
+    }
+
+    public void setUserID(Long userID) {
+        this.userID = userID;
+    }
 }

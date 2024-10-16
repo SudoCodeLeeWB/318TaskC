@@ -1,6 +1,6 @@
 package JOME.OrderService.dto;
 
-import JOME.OrderService.domain.valueObject.OrderLineItem;
+import JOME.OrderService.domain.entity.ShoppingCartOrderLineItem;
 import JOME.OrderService.domain.entity.ShoppingCart;
 
 import java.time.LocalDateTime;
@@ -15,7 +15,7 @@ public class ShoppingCartDTO {
     public LocalDateTime recentUpdateTime;
 
     // Entities
-    public List<OrderLineItemDTO> orderLineItemList;
+    public List<ShoppingCartOrderLineItemDTO> orderLineItemList;
 
     public ShoppingCartDTO(){}
 
@@ -26,13 +26,13 @@ public class ShoppingCartDTO {
         this.orderLineItemList = convertListToDTO(shoppingCart.getOrderLineItemList());
     }
 
-    private List<OrderLineItemDTO> convertListToDTO(List<OrderLineItem> original){
+    private List<ShoppingCartOrderLineItemDTO> convertListToDTO(List<ShoppingCartOrderLineItem> original){
 
         // new List
-        List<OrderLineItemDTO> newList = new ArrayList<>();
+        List<ShoppingCartOrderLineItemDTO> newList = new ArrayList<>();
         // convert to DTO
-        for( OrderLineItem orderLineItem : original){
-            OrderLineItemDTO dto = new OrderLineItemDTO(orderLineItem);
+        for( ShoppingCartOrderLineItem orderLineItem : original){
+            ShoppingCartOrderLineItemDTO dto = new ShoppingCartOrderLineItemDTO(orderLineItem);
             newList.add(dto);
         }
         return newList;

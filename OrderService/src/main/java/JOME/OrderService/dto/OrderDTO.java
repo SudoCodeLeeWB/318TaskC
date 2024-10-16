@@ -1,7 +1,7 @@
 package JOME.OrderService.dto;
 
 import JOME.OrderService.domain.entity.Order;
-import JOME.OrderService.domain.valueObject.OrderLineItem;
+import JOME.OrderService.domain.entity.OrderOrderLineItem;
 import JOME.OrderService.domain.valueObject.DeliveryAddress;
 import JOME.OrderService.domain.valueObject.OrderStatus;
 
@@ -18,7 +18,7 @@ public class OrderDTO {
     public LocalDateTime recentUpdateTime;
 
     // Entities
-    public List<OrderLineItemDTO> orderLineItemList;
+    public List<OrderOrderLineItemDTO> orderLineItemList;
 
     // value objects
     public OrderStatus orderStatus;
@@ -39,13 +39,13 @@ public class OrderDTO {
     }
 
 
-    private List<OrderLineItemDTO> convertListToDTO(List<OrderLineItem> original){
+    private List<OrderOrderLineItemDTO> convertListToDTO(List<OrderOrderLineItem> original){
 
         // new List
-        List<OrderLineItemDTO> newList = new ArrayList<>();
+        List<OrderOrderLineItemDTO> newList = new ArrayList<>();
         // convert to DTO
-        for( OrderLineItem orderLineItem : original){
-            OrderLineItemDTO dto = new OrderLineItemDTO(orderLineItem);
+        for( OrderOrderLineItem orderLineItem : original){
+            OrderOrderLineItemDTO dto = new OrderOrderLineItemDTO(orderLineItem);
             newList.add(dto);
         }
         return newList;

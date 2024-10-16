@@ -1,8 +1,10 @@
-# 318TaskC
 Task C for CSCI318 
 
 * WonbeenLee (8243657)
+* Mayowa Adeniyi (7684861)
 
+-- I guess we need to make a windows version of readme, since we do not have extra space here & 
+-- We also need to explain how to install kafka & execute it from windows
 
 ___
 
@@ -65,7 +67,7 @@ bin/kafka-console-producer.sh --topic test-topic --bootstrap-server localhost:90
 ```
 
 
-Open Another terminal , go to the same kafka path
+Open Another terminal , go to the same kafka path 
 * Consume a test message ( consumer )
 ```shell
 bin/kafka-console-consumer.sh --topic test-topic --from-beginning --bootstrap-server localhost:9092
@@ -79,7 +81,7 @@ You can now terminate producer / consumer terminal instance
 
 
 ___
-## 2. Run multiple Projects ( follow command )
+## 2. Run multiple Projects ( follow command ) 
 In this project, there are 5 different microservices included. ( This will be explained more in the below Project Structure section. )  
 We will use maven to do the build / run process  
 
@@ -123,7 +125,7 @@ mvn spring-boot:run
 
 * ShippingMicroService
 ```shell
-cd ShippingMicroService
+cd ShippingService
 mvn clean install
 mvn spring-boot:run
 ```
@@ -154,6 +156,9 @@ ___
 
 ## Sample CURL Api Calls :
 
+
+### Order Microservice Related
+
 ### Use case 1 : **Add new Product to Order**
   
 Windows Powershell
@@ -169,7 +174,7 @@ MacOs / Linux
 curl --location --request PATCH 'http://localhost:8080/order/addNew/1/1/1'
 ```
 
-### Use case 2 : **Increase quantity of an existing product**
+### Use case 2 : **Increase quantity of an existing product in Order**
 
 Windows Powershell
 ```shell
@@ -185,7 +190,7 @@ curl --location --request PATCH 'http://localhost:8080/order/add/1/1/1'
 ```
 
 
-### Use case 3 : **Deduct quantity of an existing product **
+### Use case 3 : **Deduct quantity of an existing product in Order**
 
 Windows Powershell
 ```shell
@@ -229,6 +234,8 @@ MacOs / Linux
 ```shell
 curl --location --request PATCH 'http://localhost:8080/order/cancelOrder/1'
 ```
+
+### Product Microservice Related
 
 ### Use case 7 : **Add new Product into Product Service**
 
@@ -302,27 +309,94 @@ curl --location --request DELETE 'http://localhost:8080/product/delete/1' \
 --header 'Content-Type: application/json'
 ```
 
+### Shipping Microservice Related
 
-
-### Use case 10 : ** **
+### Usecase 10 : **Get Shipping Status Of a order**
 
 Windows Powershell
 ```shell
 
 ```
-Windows Cmd
+Windows cmd 
+```shell
+```
+
+MacOS / Linux
+```shell
+curl --location 'http://localhost:8080/shipping/getShippingStatus/1'
+```
+
+
+### Usecase 11 : **Mark Shipment as Shipped**
+
+Windows Powershell
 ```shell
 
 ```
-MacOs / Linux
+Windows cmd
 ```shell
 
+```
 
+MacOS / Linux
+```shell
+curl --location --request PATCH 'http://localhost:8080/shipping/markAsShipped/1'
+```
+
+### Usecase 12 : **Mark Shipment as Delivered**
+
+Windows Powershell
+```shell
+
+```
+Windows cmd
+```shell
+
+```
+
+MacOS / Linux
+```shell
+curl --location --request PATCH 'http://localhost:8080/shipping/markAsDelivered/1'
+```
+
+### Stream Processing Related
+
+### Usecase 13 : **Query total Order Numbers Before N minutes**
+
+Windows Powershell
+```shell
+
+```
+Windows cmd
+```shell
+
+```
+
+MacOS / Linux
+```shell
+curl --location 'http://localhost:8080/analysis/getOrderNumbersFromBefore/5'
+```
+
+### Usecase 14 : **Query total Sales Per Country Before N minutes**
+
+Windows Powershell
+```shell
+
+```
+Windows cmd
+```shell
+
+```
+
+MacOS / Linux
+```shell
+curl --location 'http://localhost:8080/analysis/getCountrySales/Australia/3'
 ```
 
 
 
 
+### User Microservice Related
 
 
 
@@ -335,13 +409,23 @@ MacOs / Linux
 
 
 
+___ 
+
+
+## Simulation of Real World & Stream Processing 
+
+* This project includes a file for simulation in the Simulation Directory. 
+* The Main.py is used to simulate the real world, where the users from all over the world continuously sending requests
+* In this main.py script, it adds a new 19 products to the system, adds new 00 customers , and generated customers send api request asynchronously for every 0.5 seconds.
+* After running this script, try Stream processing Related Calls. 
+
+![RealWorldSimulation](./ReadmeImageFiles/RealWorldSimulation.png)
 
 
 
+TODO : add the delivery class & updating the delivery status for every 1 seconds
 
-
-
-
+___
 
 
 

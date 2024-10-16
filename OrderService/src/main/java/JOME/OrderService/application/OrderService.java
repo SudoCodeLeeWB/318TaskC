@@ -1,33 +1,22 @@
 package JOME.OrderService.application;
 
-
-import JOME.OrderService.antiCorruption.DeleteProductEventMapper;
-import JOME.OrderService.antiCorruption.ProductCreateEventMapper;
-import JOME.OrderService.antiCorruption.UpdateProductStockEventMapper;
-import JOME.OrderService.domain.entity.Customer;
-import JOME.OrderService.domain.entity.Order;
-import JOME.OrderService.domain.entity.Product;
-import JOME.OrderService.domain.entity.ShoppingCart;
-import JOME.OrderService.domain.factory.OrderFactory;
-import JOME.OrderService.domain.factory.ShoppingCartFactory;
-import JOME.OrderService.domain.service.OrderDomainService;
-import JOME.OrderService.domain.service.ShoppingCartDomainService;
-import JOME.OrderService.dto.OrderDTO;
-import JOME.OrderService.dto.ShoppingCartDTO;
-
+import JOME.OrderService.antiCorruption.*;
+import JOME.OrderService.domain.entity.*;
+import JOME.OrderService.domain.event.*;
+import JOME.OrderService.domain.factory.*;
+import JOME.OrderService.dto.*;
+import JOME.OrderService.infrastructure.persistance.*;
+import JOME.shared_events.*;
 import JOME.OrderService.infrastructure.external.messaging.KafkaProducerService;
 import JOME.OrderService.infrastructure.external.rest.RestPaymentClient;
-import JOME.OrderService.infrastructure.persistance.CustomerRepostory;
-import JOME.OrderService.infrastructure.persistance.OrderRepository;
-import JOME.OrderService.infrastructure.persistance.ProductRepository;
-import JOME.OrderService.infrastructure.persistance.ShoppingCartRepository;
-import JOME.shared_events.AddNewProductEventShared;
-import JOME.shared_events.ProductDeleteEventShared;
-import JOME.shared_events.UpdateProductStockEventShared;
+import JOME.OrderService.domain.service.ShoppingCartDomainService;
+import JOME.OrderService.domain.service.OrderDomainService;
+
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
-
 import java.util.Optional;
+
+
 
 @Service
 public class OrderService {
@@ -65,11 +54,10 @@ public class OrderService {
 
 
 
-
     // Implementing use-cases
 
-
     // 1. Add a new product to the shopping cart
+    @Transactional
     public ShoppingCartDTO addNewOrderLineItemToShoppingCart(Long customerId , Long productId , int quantity) {
 
         // setup shopping cart
@@ -82,13 +70,15 @@ public class OrderService {
 
         // add product to the shopping cart ( delegate )
         ShoppingCart savedResult = shoppingCartDomainService.addNewProductToShoppingCart(currentShoppingCart, newProduct, quantity );
-        savedResult = shoppingCartRepository.save(savedResult); //  
+        savedResult = shoppingCartRepository.save(savedResult); //
 
         return new ShoppingCartDTO(savedResult);
     }
 
 
     // 2. Change the Quantity of a OrderLineProduct ( shopping cart ) - Delete
+
+    @Transactional
     public ShoppingCartDTO deleteOrderLineItemQuantity( Long customerId, Long productId , int quantity ){
 
         //setup shopping cart
@@ -102,8 +92,10 @@ public class OrderService {
 
     }
 
+
     // 3. Change the Quantity of a OrderLineProduct ( shopping cart ) - Add
 
+    @Transactional
     public ShoppingCartDTO addOrderLineItemQuantity( Long customerId , Long productId , int quantity ){
 
         //setup shopping cart
@@ -112,13 +104,14 @@ public class OrderService {
 
         // Add product quantity from shopping cart ( delegate )
         ShoppingCart savedResult = shoppingCartDomainService.addProductQuantityFromShoppingCart(currentShoppingCart,productId, quantity );
-        savedResult = shoppingCartRepository.save(savedResult); //  
+        savedResult = shoppingCartRepository.save(savedResult);
+
         return new ShoppingCartDTO(savedResult);
 
     }
 
 
-    // 3. Place Order
+    // 4. Place Order
     @Transactional
     public OrderDTO placeOrder( Long customerId ){
 
@@ -137,36 +130,42 @@ public class OrderService {
         boolean paymentResult = restPaymentClient.processPayment(currentCustomer);
 
 
+        // Change the state of the Order - call orderDomain Service here
+        // ( the state will be different based on the payment result )
+        Order savedResult = orderDomainService.placeOrder(newOrder , paymentResult);
+
+        // save the Order State
+        Order savedState = orderRepository.save(savedResult);
+
+        // because of id of Order -> After when we have a Order ID.
         if(paymentResult){
             // end of ShoppingCartLifeCycle
             currentShoppingCart.getOrderLineItemList().clear();
             shoppingCartRepository.delete(currentShoppingCart);
 
             // Raise New Event : OrderPlaced Event
-
+            OrderPlacedEvent orderPlacedEvent = new OrderPlacedEvent(savedState);
+            kafkaProducerService.sendOrderPlacedEvent(orderPlacedEvent);
         }
 
 
-        // Change the state of the Order - call orderDomain Service here ( the state will be different based on the payment result )
-        Order savedResult = orderDomainService.placeOrder(newOrder , paymentResult);
-
-
-        // save the Order State
-        Order SavedState = orderRepository.save(savedResult);
-        return new OrderDTO(SavedState);
+        return new OrderDTO(savedState);
 
     }
 
 
-    // 4. Cancel Order
-   public OrderDTO cancelOrder(Long orderId){
+    // 5. Cancel Order
+    @Transactional
+    public OrderDTO cancelOrder(Long orderId){
 
         // find order from Repository
         Optional<Order> order = orderRepository.findById(orderId);
-        Order currentOrder = order.orElseThrow( () -> new RuntimeException());
+        Order currentOrder = order.orElseThrow(RuntimeException::new);
 
 
         // Raise New Event : OrderCanceled Event
+        OrderCanceledEvent orderCanceledEvent = new OrderCanceledEvent(currentOrder);
+        kafkaProducerService.sendOrderCancelledEvent(orderCanceledEvent);
 
 
         // change state of this order
@@ -179,10 +178,7 @@ public class OrderService {
 
 
 
-
-
     // Usage from others ( customer repository management )
-
     // Kafka subscribe
 
     // for CustomerRRepository - CRUD
@@ -193,22 +189,18 @@ public class OrderService {
 
     // for ProductRepository - CRUD
     public void handleProductCreated(AddNewProductEventShared event){
-
         // apply ACL
         Product newProduct = ProductCreateEventMapper.mapFromEventToDomain(event);
-
         // Save it
         Product savedState = productRepository.save(newProduct);
-
-        // DEBUG :
-        System.out.println(savedState);
-
     }
+
+
+
     public void handleProductDeleted(ProductDeleteEventShared event){
 
         // apply ACL
         Long targetId = DeleteProductEventMapper.mapFromEventToDomain(event);
-
         productRepository.deleteById(targetId);
 
     }
@@ -216,7 +208,6 @@ public class OrderService {
 
 
     public void handleProductUpdated(UpdateProductStockEventShared event){
-
 
         Long targetProductId = event.getId();
         Optional<Product> targetProduct = productRepository.findById(targetProductId);
@@ -227,9 +218,6 @@ public class OrderService {
 
         // update product state
         Product savedState = productRepository.save(modifiedProduct);
-
-        // DEBUG :
-        System.out.println(event);
 
     }
 

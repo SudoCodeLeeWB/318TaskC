@@ -1,7 +1,6 @@
 package JOME.OrderService.domain.entity;
 
 
-import JOME.OrderService.domain.valueObject.OrderLineItem;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -21,14 +20,11 @@ public class ShoppingCart {
     private LocalDateTime recentUpdateTime;
 
     // Entities
-    @ElementCollection
-    @CollectionTable
-    private List<OrderLineItem> orderLineItemList = new ArrayList<>();
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "shoppingCart")
+    private List<ShoppingCartOrderLineItem> orderLineItemList = new ArrayList<>();
 
     // Constructor
-
     protected ShoppingCart(){}
-
 
 
     /**
@@ -39,10 +35,6 @@ public class ShoppingCart {
         this.totalPrice = totalPrice;
         this.recentUpdateTime = recentUpdateTime;
     }
-
-
-
-
 
 
     /** Business Logic :
@@ -61,8 +53,13 @@ public class ShoppingCart {
             quantity = 10;
         }
 
-        OrderLineItem orderLineItem = new OrderLineItem( product , quantity);
-        orderLineItemList.add(orderLineItem);
+        ShoppingCartOrderLineItem existingItem = findProduct(product.getId());
+        if (existingItem != null) {
+            addOrderLineItemQuantity(product.getId(), quantity);
+        } else {
+            ShoppingCartOrderLineItem newItem = new ShoppingCartOrderLineItem( this, product, quantity, this.id);
+            orderLineItemList.add(newItem);
+        }
 
     }
 
@@ -81,7 +78,7 @@ public class ShoppingCart {
         }
 
         // find existing OrderLineItem
-        OrderLineItem target = findProduct(productId);
+        ShoppingCartOrderLineItem target = findProduct(productId);
 
         if( target == null){
             return;
@@ -119,7 +116,7 @@ public class ShoppingCart {
         }
 
         // find existing OrderLineItem
-        OrderLineItem target = findProduct(productId);
+        ShoppingCartOrderLineItem target = findProduct(productId);
 
         if( target == null){
             return;
@@ -127,24 +124,18 @@ public class ShoppingCart {
 
         int updatedQuantity = target.getQuantity() - quantity;
 
-        // business logic handle ( if updated quantity <= 0 -> delete item )
-        if( updatedQuantity <= 0 ){
-
-            // remove the item if..
-            orderLineItemList.removeIf(orderLineItem -> orderLineItem.getProduct().getId().equals(productId));
+        if (updatedQuantity <= 0) {
+            orderLineItemList.remove(target);
+        } else {
+            target.setQuantity(updatedQuantity);
         }
-
-        // else : update the quantity
-        target.setQuantity(updatedQuantity);
 
     }
 
 
-
-
     // private helper method to find the product in the OrderLineItem
-    private OrderLineItem findProduct( Long productId ){
-        for(OrderLineItem orderLineItem : orderLineItemList){
+    private ShoppingCartOrderLineItem findProduct(Long productId ){
+        for(ShoppingCartOrderLineItem orderLineItem : orderLineItemList){
             if(orderLineItem.getProduct().getId().equals(productId)){
                 return orderLineItem;
             }
@@ -162,7 +153,7 @@ public class ShoppingCart {
         double sum = 0.0 ;
 
         // iterate & calculate sum
-        for(OrderLineItem orderLineItem : orderLineItemList){
+        for(ShoppingCartOrderLineItem orderLineItem : orderLineItemList){
             sum += orderLineItem.getSubtotalPrice();
         }
 
@@ -179,7 +170,7 @@ public class ShoppingCart {
     }
 
 
-    // getters and setters TODO : check the usage and remove if it is not used
+    // getters and setters
 
     public void setId(Long id) {
         this.id = id;
@@ -213,11 +204,11 @@ public class ShoppingCart {
         this.recentUpdateTime = recentUpdateTime;
     }
 
-    public List<OrderLineItem> getOrderLineItemList() {
+    public List<ShoppingCartOrderLineItem> getOrderLineItemList() {
         return orderLineItemList;
     }
 
-    public void setOrderLineItemList(List<OrderLineItem> orderLineItemList) {
+    public void setOrderLineItemList(List<ShoppingCartOrderLineItem> orderLineItemList) {
         this.orderLineItemList = orderLineItemList;
     }
 }

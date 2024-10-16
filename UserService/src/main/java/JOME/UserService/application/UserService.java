@@ -37,6 +37,28 @@ public class UserService {
         this.userDomainService = userDomainService;
     }
 
+//
+//    // Create
+//    public UserDTO addNewUser( UserDTO userDTO){
+//
+//
+//        User newUser = userFactory.createUser(userDTO);
+//
+//
+//        // save the new product into product repository
+//        User savedResult = userRepository.save(newUser);
+//
+//        // for persistence -> when it is saved, then it will have a id,
+//        // this id will be used for same in other databases ( persistence )
+//
+//        // Raise new event = AddNewProductEvent
+//        AddNewProductEvent event = new AddNewProductEvent(savedResult);
+//        kafkaProducerService.sendProductAddEvent(event);
+//
+//
+//        return new ProductDTO(savedResult);
+//
+//    }
 
     // Create
     public UserDTO addNewUser( UserDTO userDTO ){

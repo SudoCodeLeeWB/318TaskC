@@ -1,19 +1,17 @@
 package JOME.UserService.domain.entity;
 
+import JOME.UserService.domain.valueObject.DeliveryAddress;
 import jakarta.persistence.*;
-import java.util.List;
-import org.springframework.stereotype.Component;
-import JOME.UserService.domain.valueObject.Address;
-import JOME.UserService.domain.enumeration.UserType;
-
-// make UserType, Cart, Order
+import JOME.UserService.domain.valueObject.UserType;
 
 
 @Entity
+@Table(name="SystemUser")
 public class User {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String userID;
+    private Long userID;
 
     private String name;
     private String email;
@@ -25,13 +23,12 @@ public class User {
     private UserType userType;
 
     @Embedded
-    private Address address;
+    private DeliveryAddress address;
 
 
     // Shipment constructor to initialise a shippingStatus, order ID
     public User (){}
-    public User(String userID, String name, String email, String phoneNumber, String password, UserType userType, Address address ) {
-        this.userID = userID;
+    public User( String name, String email, String phoneNumber, String password, UserType userType, DeliveryAddress address ) {
         this.name = name;
         this.email = email;
         this.phoneNumber = phoneNumber;
@@ -40,10 +37,8 @@ public class User {
         this.address = address;
     }
 
+
     // getters
-    public String getUserID(){
-        return this.userID;
-    }
     public String getName(){
         return this.name;
     }
@@ -59,14 +54,8 @@ public class User {
     public UserType getUserType(){
         return this.userType;
     }
-    public Address getAddress(){
-        return this.address;
-    }
 
-    // setters
-    public void setUserID(String userID){
-        this.userID = userID;
-    }
+
     public void setName(String name){
         this.name = name;
     }
@@ -84,7 +73,12 @@ public class User {
         this.userType = userType;
     }
 
-    public void setAddress(Address address){
+
+    public DeliveryAddress getAddress() {
+        return address;
+    }
+
+    public void setAddress(DeliveryAddress address) {
         this.address = address;
     }
 }

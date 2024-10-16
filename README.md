@@ -422,6 +422,9 @@ ___
 ![RealWorldSimulation](./ReadmeImageFiles/RealWorldSimulation.png)
 
 
+
+TODO : add the delivery class & updating the delivery status for every 1 seconds
+
 ___
 
 

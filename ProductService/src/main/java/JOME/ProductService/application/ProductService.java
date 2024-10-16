@@ -10,6 +10,7 @@ import JOME.ProductService.domain.valueObject.CategoryEnum;
 import JOME.ProductService.dto.ProductDTO;
 import JOME.ProductService.infrastructure.external.messaging.KafkaProducerService;
 import JOME.ProductService.infrastructure.persistance.ProductRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -31,6 +32,7 @@ public class ProductService {
     private final KafkaProducerService kafkaProducerService;
 
 
+    @Autowired
     public ProductService(ProductRepository productRepository, ProductFactory productFactory, ProductDomainService productDomainService, KafkaProducerService kafkaProducerService) {
         this.productRepository = productRepository;
         this.productFactory = productFactory;

@@ -1,4 +1,4 @@
-package JOME.UserService.domain.enumeration;
+package JOME.UserService.domain.valueObject;
 
 public enum UserType {
   Customer,

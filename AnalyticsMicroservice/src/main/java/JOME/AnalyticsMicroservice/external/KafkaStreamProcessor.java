@@ -26,39 +26,28 @@ public class KafkaStreamProcessor {
     @Bean
     public Consumer<KStream<String, Object>> processEvents() {
 
-        // inputStream = KStream , configured by KafkaStreamConfig
         return inputStream -> {
 
-            // Deserialize the incoming events
+
+            // Step 1: Deserialize the incoming events
             KStream<String, Object> deserializedStream = inputStream.mapValues(value -> {
                 if (value instanceof byte[]) {
                     try {
-                        // Deserialize the byte[] into an appropriate event
-                        String json = new String((byte[]) value);
-
-                        // Try to deserialize into OrderPlacedEventShared
-                        try{
-                            OrderPlacedEventShared event = new ObjectMapper().readValue(json, OrderPlacedEventShared.class); // handle OrderCanceledEventSomewhere similarary here?
-                            // having customer name => it is OrderPlacedSharedEvent ( look for shared event structure )
-                            if(event.getCustomerName() != null){
-                                return event;
-                            }
-                        } catch (Exception ignored) {}
-
-                        // Attempt to deserialize into OrderCanceled Event ( not OrderPlaced -> OrderCanceled )
-                        try{
+                        String json = new String((byte[]) value); // Deserialize the byte[] into an appropriate event
+                        try{ // Try to deserialize into OrderPlacedEventShared
+                            OrderPlacedEventShared event = new ObjectMapper().readValue(json, OrderPlacedEventShared.class);
+                            // having customer name => it is OrderPlacedSharedEvent
+                            if(event.getCustomerName() != null){ return event; }
+                        } catch (Exception ignored){}
+                        try{ // Attempt to deserialize into OrderCanceled Event ( not OrderPlaced -> OrderCanceled )
                             return new ObjectMapper().readValue(json, OrderCanceledEventShared.class);
                         }catch (Exception ignored){}
-
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
+                    } catch (Exception e) {e.printStackTrace();}}
                 return value;
             });
 
 
-            // Fork 1 : from deserialized Stream , counting OrderNumbers -  ( maybe consider refactoring like this ? )
+            // Fork 1 : from deserialized Stream , counting OrderNumbers
             // Configure Keys for KTable
             KStream<String, Object> streamWithKeysAsCustomerId = deserializedStream.selectKey((key, value) -> {
                 if (value instanceof OrderPlacedEventShared) {
@@ -112,7 +101,7 @@ public class KafkaStreamProcessor {
                         if (value instanceof OrderPlacedEventShared) {
                             return ((OrderPlacedEventShared) value).getTotalPrice();
                         }else if (value instanceof OrderCanceledEventShared) {
-                            return ((OrderCanceledEventShared) value).getTotalPrice();
+                            return ((OrderCanceledEventShared) value).getTotalPrice() * (-1);
                         } else {
                             return 0.0;
                         }});

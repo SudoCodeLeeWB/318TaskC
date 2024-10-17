@@ -34,7 +34,6 @@ public class  AnalyticsService {
 
 
     // Use case 1
-
     /**
      * REFERENCE :  https://kafka.apache.org/10/documentation/streams/developer-guide/interactive-queries.html#querying-local-window-stores
      * @return number of orders made during time window
@@ -59,7 +58,6 @@ public class  AnalyticsService {
 
         return totalOrders;
     }
-
 
     public double getTotalSalesForTimeWindow( String country, Instant fromTime, Instant toTime) {
 

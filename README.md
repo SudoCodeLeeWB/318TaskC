@@ -311,7 +311,7 @@ curl --location --request PATCH 'http://localhost:8080/order/cancelOrder/1'
 
 ### Product Microservice Related
 
-### Use case 7 : **Add new Product into Product Service**
+### Use case 6 : **Add new Product into Product Service**
 
 Windows Powershell
 ```shell
@@ -348,7 +348,7 @@ curl --location 'http://localhost:8080/product/add' \
 }'
 ```
 
-### Use case 8 : **Update Product Stock**
+### Use case 7 : **Update Product Stock**
 
 Windows Powershell
 ```shell
@@ -366,7 +366,7 @@ curl --location --request PATCH 'http://localhost:8080/product/updateStock/1/20'
 ```
 
 
-### Use case 9 : **Delete Product From Product Service**
+### Use case 8 : **Delete Product From Product Service**
 
 Windows Powershell
 ```shell
@@ -385,7 +385,7 @@ curl --location --request DELETE 'http://localhost:8080/product/delete/1' \
 
 ### Shipping Microservice Related
 
-### Usecase 10 : **Get Shipping Status Of a order**
+### Usecase 9 : **Get Shipping Status Of a order**
 
 Windows Powershell
 ```shell
@@ -402,7 +402,7 @@ curl --location 'http://localhost:8080/shipping/getShippingStatus/1'
 ```
 
 
-### Usecase 11 : **Mark Shipment as Shipped**
+### Usecase 10 : **Mark Shipment as Shipped**
 
 Windows Powershell
 ```shell
@@ -418,7 +418,7 @@ MacOS / Linux
 curl --location --request PATCH 'http://localhost:8080/shipping/markAsShipped/1'
 ```
 
-### Usecase 12 : **Mark Shipment as Delivered**
+### Usecase 11 : **Mark Shipment as Delivered**
 
 Windows Powershell
 ```shell
@@ -434,46 +434,9 @@ MacOS / Linux
 curl --location --request PATCH 'http://localhost:8080/shipping/markAsDelivered/1'
 ```
 
-
-### Stream Processing Related
-
-### Usecase 13 : **Query total Order Numbers Before N minutes**
-
-Windows Powershell
-```shell
-Invoke-RestMethod -Uri "http://localhost:8080/analysis/getOrderNumbersFromBefore/5" -Method Get
-```
-Windows cmd
-```shell
-curl --location "http://localhost:8080/analysis/getOrderNumbersFromBefore/5"
-```
-
-MacOS / Linux
-```shell
-curl --location 'http://localhost:8080/analysis/getOrderNumbersFromBefore/5'
-```
-
-### Usecase 14 : **Query total Sales Per Country Before N minutes**
-
-Windows Powershell
-```shell
-Invoke-RestMethod -Uri "http://localhost:8080/analysis/getCountrySales/Australia/3" -Method Get
-
-```
-Windows cmd
-```shell
-curl --location "http://localhost:8080/analysis/getCountrySales/Australia/3"
-```
-
-MacOS / Linux
-```shell
-curl --location 'http://localhost:8080/analysis/getCountrySales/Australia/3'
-```
-
-
 ### User Microservice Related
 
-### Usecase 15 : ** Add new User **
+### Usecase 12 : Add new User
 
 Windows Powershell
 ```shell
@@ -503,7 +466,7 @@ curl --location 'http://localhost:8080/user/add' \
 }'
 ```
 
-### Usecase 16 : **Update User Address**
+### Usecase 13 : Update User Address
 
 Windows Powershell
 ```shell
@@ -525,6 +488,42 @@ curl --location --request PATCH 'http://localhost:8080/user/updateAddress/1' \
     "postCode": "2500"
 }'
 ```
+
+### Stream Processing Related
+
+### Usecase 14 : **Query total Order Numbers Before N minutes**
+
+Windows Powershell
+```shell
+Invoke-RestMethod -Uri "http://localhost:8080/analysis/getOrderNumbersFromBefore/5" -Method Get
+```
+Windows cmd
+```shell
+curl --location "http://localhost:8080/analysis/getOrderNumbersFromBefore/5"
+```
+
+MacOS / Linux
+```shell
+curl --location 'http://localhost:8080/analysis/getOrderNumbersFromBefore/5'
+```
+
+### Usecase 15 : **Query total Sales Per Country Before N minutes**
+
+Windows Powershell
+```shell
+Invoke-RestMethod -Uri "http://localhost:8080/analysis/getCountrySales/Australia/3" -Method Get
+
+```
+Windows cmd
+```shell
+curl --location "http://localhost:8080/analysis/getCountrySales/Australia/3"
+```
+
+MacOS / Linux
+```shell
+curl --location 'http://localhost:8080/analysis/getCountrySales/Australia/3'
+```
+
 
 ___ 
 
